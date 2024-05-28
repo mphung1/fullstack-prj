@@ -1,0 +1,10 @@
+CREATE TABLE patients (
+    patient_id BIGINT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    gender VARCHAR(50) NOT NULL,
+    age INT NOT NULL,
+    email VARCHAR(50),
+    phone_number VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
