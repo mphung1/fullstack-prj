@@ -41,9 +41,4 @@ public class PatientSpecification {
         return (root, query, criteriaBuilder) -> 
             (phoneNumber == null || phoneNumber.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.like(criteriaBuilder.lower(root.get("phoneNumber")), "%" + phoneNumber.toLowerCase() + "%");
     }
-
-    public static Specification<Patient> isActive(boolean isActive) {
-        return (root, query, criteriaBuilder) -> 
-            (Boolean.FALSE.equals(isActive)) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("isActive"), isActive);
-    }
 }

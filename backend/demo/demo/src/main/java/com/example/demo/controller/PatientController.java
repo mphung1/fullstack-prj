@@ -26,12 +26,10 @@ public class PatientController {
         @RequestParam(required = false) String gender,
         @RequestParam(required = false) String age,
         @RequestParam(required = false) String email,
-        @RequestParam(required = false) String phoneNumber        // @RequestParam(required = false) Boolean isActive
+        @RequestParam(required = false) String phoneNumber    
 
     ) {
-        return patientService.getFilteredPatients(PageRequest.of(page, size), patientId, name, gender, age, email, phoneNumber
-        // , isActive
-        );
+        return patientService.getFilteredPatients(PageRequest.of(page, size), patientId, name, gender, age, email, phoneNumber);
     }
 
 

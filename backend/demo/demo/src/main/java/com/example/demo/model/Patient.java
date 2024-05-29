@@ -42,17 +42,10 @@ public class Patient {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    
-    // @Column(name = "isActive", nullable = false)
-    // private Boolean isActive;
-
-    // Getters and setters
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        // isActive = true;
     }
 
     @PreUpdate

@@ -12,16 +12,11 @@ import java.util.List;
 public class PatientMapper {
 
     public static Patient toEntity(PatientDto dto) {
-        return new Patient(dto.getPatientId(), dto.getName(), dto.getGender(), dto.getAge(), dto.getEmail(), dto.getPhoneNumber(), dto.getCreatedAt(), dto.getUpdatedAt()
-        
-        // , dto.isActive()
-        );
+        return new Patient(dto.getPatientId(), dto.getName(), dto.getGender(), dto.getAge(), dto.getEmail(), dto.getPhoneNumber(), dto.getCreatedAt(), dto.getUpdatedAt());
     }
 
     public static PatientDto toDto(Patient patient) {
-        return new PatientDto(patient.getPatientId(), patient.getName(), patient.getGender(), patient.getAge(), patient.getEmail(), patient.getPhoneNumber(), patient.getCreatedAt(), patient.getUpdatedAt()
-        // , patient.isActive()
-        );
+        return new PatientDto(patient.getPatientId(), patient.getName(), patient.getGender(), patient.getAge(), patient.getEmail(), patient.getPhoneNumber(), patient.getCreatedAt(), patient.getUpdatedAt());
     }
     public static List<PatientDto> toDtos(List<Patient> patients) {
         return patients.stream().map(PatientMapper::toDto).toList();

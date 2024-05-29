@@ -21,22 +21,14 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PatientService {
     private final PatientRepository patientRepository;
-    
-    
-    // public List<PatientDto> getAllPatients() {
-        //     return PatientMapper.toDtos(patientRepository.findAll());
-        // }
-        
-    public Page<PatientDto> getFilteredPatients(Pageable pageable, String patientId, String name, String gender, String age, String email, String phoneNumber
-    // , Boolean isActive
-    ) {
+            
+    public Page<PatientDto> getFilteredPatients(Pageable pageable, String patientId, String name, String gender, String age, String email, String phoneNumber) {
            Specification<Patient> spec = Specification.where(PatientSpecification.hasPatientId(patientId))
                .and(PatientSpecification.hasName(name))
                .and(PatientSpecification.hasGender(gender))
                .and(PatientSpecification.hasAge(age))
                .and(PatientSpecification.hasEmail(email))
                .and(PatientSpecification.hasPhoneNumber(phoneNumber));
-            //    .and(PatientSpecification.isActive(isActive));
     
            Page<Patient> patientPage = patientRepository.findAll(spec, pageable);
            return PatientMapper.toDtoPage(patientPage);
@@ -56,18 +48,6 @@ public class PatientService {
     }
 
     public void deletePatient(Long id) {
-        // Patient deletePatient = patientRepository.findById(id).orElse(null);
-        // if (deletePatient == null) {
-        //     System.out.println("Patient not found");
-        // }
-        // deletePatient.setActive(false);
-        // patientRepository.save(deletePatient)
         patientRepository.deleteById(id);
-    }
-
-    public Page<PatientDto> getActivePatients(Pageable pageable) {
-        Specification<Patient> spec = Specification.where(PatientSpecification.isActive(true));
-        Page<Patient> patientPage = patientRepository.findAll(spec, pageable);
-        return PatientMapper.toDtoPage(patientPage);
     }
 }
