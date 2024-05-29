@@ -20,7 +20,7 @@ public class PatientController {
     @GetMapping
     public Page<PatientDto> getAllPatients(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "1") int size,
+        @RequestParam(defaultValue = "5") int size,
         @RequestParam(required = false) String patientId,
         @RequestParam(required = false) String name,
         @RequestParam(required = false) String gender,

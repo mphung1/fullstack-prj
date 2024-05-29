@@ -24,6 +24,7 @@ import {
   InputLabel,
   Select,
   SelectChangeEvent,
+  Box,
 } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
 import api from "../api";
@@ -37,9 +38,8 @@ const Dashboard: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState("1");
-  const pageSizeArray = [1, 2, 3, 4];
-  const patientsPerPage = 4;
+  const [pageSize, setPageSize] = useState("5");
+  const pageSizeArray = [5, 10, 15, 20];
 
   const [filterPatientId, setFilterPatientId] = useState<string>("");
   const [filterName, setFilterName] = useState<string>("");
@@ -53,7 +53,7 @@ const Dashboard: React.FC = () => {
       const response = await api.get("/patients", {
         params: {
           page: page - 1,
-          size: pageSize,
+          size: size,
           patientId: filters.patientId,
           name: filters.name,
           gender: filters.gender,
@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    loadPatients(currentPage, patientsPerPage, {
+    loadPatients(currentPage, Number(pageSize), {
       size: pageSize,
       patientId: filterPatientId,
       name: filterName,
@@ -80,17 +80,6 @@ const Dashboard: React.FC = () => {
       phoneNumber: filterPhoneNumber,
     });
   }, [pageSize, currentPage]);
-
-  // useEffect(() => {
-  //   loadPatients(currentPage, patientsPerPage, {
-  //     patientId: filterPatientId,
-  //     name: filterName,
-  //     gender: filterGender,
-  //     age: filterAge,
-  //     email: filterEmail,
-  //     phoneNumber: filterPhoneNumber,
-  //   });
-  // }, [currentPage]);
 
   const handleCreatePatient = () => {
     navigate("/create-patient");
@@ -113,7 +102,7 @@ const Dashboard: React.FC = () => {
   const handleConfirmDelete = async () => {
     try {
       await api.delete(`/patients/${selectedId}`);
-      loadPatients(currentPage, patientsPerPage, {
+      loadPatients(currentPage, Number(pageSize), {
         patientId: filterPatientId,
         name: filterName,
         gender: filterGender,
@@ -144,7 +133,7 @@ const Dashboard: React.FC = () => {
 
   const applyFilters = () => {
     setCurrentPage(1);
-    loadPatients(1, patientsPerPage, {
+    loadPatients(1, Number(pageSize), {
       patientId: filterPatientId,
       name: filterName,
       gender: filterGender,
@@ -226,24 +215,6 @@ const Dashboard: React.FC = () => {
             Filter
           </Button>
         </Grid>
-
-        <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id="demo-simple-select-filled-label">
-            Page size
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            value={pageSize}
-            onChange={handlePageSizeChange}
-          >
-            {pageSizeArray.map((val) => (
-              <MenuItem key={val} value={val}>
-                {val}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </Grid>
       <TableContainer component={Paper} style={{ marginTop: "20px" }}>
         <Table>
@@ -294,14 +265,35 @@ const Dashboard: React.FC = () => {
             Create Patient
           </Button>
         </Grid>
+
         <Grid item>
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            variant="outlined"
-            color="primary"
-          />
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Page size
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={pageSize}
+                onChange={handlePageSizeChange}
+              >
+                {pageSizeArray.map((val) => (
+                  <MenuItem key={val} value={val}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              variant="outlined"
+              color="primary"
+              sx={{ m: 1 }}
+            />
+          </Box>
         </Grid>
       </Grid>
       <Dialog open={open} onClose={handleClose}>
