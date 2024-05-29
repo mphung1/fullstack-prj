@@ -18,5 +18,5 @@ public class PatientDto {
     private String phoneNumber;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
+    // private Boolean isActive;
 }
