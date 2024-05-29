@@ -166,14 +166,14 @@ const Dashboard: React.FC = () => {
         justifyContent="space-between"
         style={{ marginTop: "20px" }}
       >
-        <Grid item xs={12} sm={2}>
+        {/* <Grid item xs={12} sm={2}>
           <TextField
             label="Patient ID"
             value={filterPatientId}
             onChange={(e) => handleFilterChange(e, setFilterPatientId)}
             fullWidth
           />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} sm={2}>
           <TextField
@@ -183,6 +183,7 @@ const Dashboard: React.FC = () => {
             fullWidth
           />
         </Grid>
+
         <Grid item xs={12} sm={2}>
           <TextField
             select
