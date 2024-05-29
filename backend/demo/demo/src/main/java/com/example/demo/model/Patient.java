@@ -45,9 +45,6 @@ public class Patient {
     
     // @Column(name = "isActive", nullable = false)
     // private Boolean isActive;
-    
-    // @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    // private Boolean isActive;
 
     // Getters and setters
 
