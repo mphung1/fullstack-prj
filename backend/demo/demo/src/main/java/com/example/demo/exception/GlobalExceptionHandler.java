@@ -12,4 +12,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDuplicateFieldException(DuplicateFieldException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<String> handlePatientNotFoundException(PatientNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(EmailExistsException.class)
+    public ResponseEntity<String> handleEmailAlreadyExistsException(EmailExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(PhoneNumExistsException.class)
+    public ResponseEntity<String> handlePhoneNumberAlreadyExistsException(PhoneNumExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }

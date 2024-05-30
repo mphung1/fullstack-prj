@@ -1,13 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Typography, Button, Grid, Paper } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Button,
+  Grid,
+  Paper,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { usePatient } from "../context/PatientContext";
 import api from "../api";
+import axios, { AxiosError } from "axios";
 
 const CreatePatientConfirm: React.FC = () => {
   const navigate = useNavigate();
   const { patient } = usePatient();
   const [isSaved, setIsSaved] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   const handleBack = () => {
     navigate("/create-patient");
@@ -18,13 +32,29 @@ const CreatePatientConfirm: React.FC = () => {
       const response = await api.post("/patients", patient);
       console.log("Patient created:", response.data);
       setIsSaved(true);
+      setSnackbarMessage("Patient created successfully!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setSnackbarMessage(
+          "Error creating patient: " + (error.response?.data || error.message)
+        );
+      } else {
+        setSnackbarMessage("Error creating patient: " + String(error));
+      }
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
       console.error("Error creating patient", error);
     }
   };
 
   const handleGoHome = () => {
     navigate("/");
+  };
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   };
 
   if (isSaved) {
@@ -71,6 +101,19 @@ const CreatePatientConfirm: React.FC = () => {
           </Button>
         </Grid>
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

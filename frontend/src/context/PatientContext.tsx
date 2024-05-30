@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface Patient {
-  id: string;
+  patientId: string;
   name: string;
   gender: string;
   age: string;
@@ -26,7 +26,7 @@ export const PatientProvider: React.FC<PatientProviderProps> = ({
   children,
 }) => {
   const [patient, setPatient] = useState<Patient>({
-    id: "",
+    patientId: "",
     name: "",
     gender: "",
     age: "",

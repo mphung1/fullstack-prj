@@ -5,24 +5,33 @@ import com.example.demo.model.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PatientMapper {
+public interface PatientMapper {
 
     public static Patient toEntity(PatientDto dto) {
         if (dto == null) {
             return null;
         }
         Patient patient = new Patient();
-        patient.setPatientId(Long.valueOf(dto.getPatientId()));
+        if (dto.getPatientId() != null) {
+            patient.setPatientId(Long.valueOf(dto.getPatientId()));
+        }
         patient.setName(dto.getName());
         patient.setGender(dto.getGender());
         patient.setAge(Integer.parseInt(dto.getAge()));
         patient.setEmail(dto.getEmail());
         patient.setPhoneNumber(dto.getPhoneNumber());
-//         patient.setCreatedAt(dto.getCreatedAt());
-//         patient.setUpdatedAt(dto.getUpdatedAt());
+        if (dto.getCreatedAt() != null) {
+            patient.setCreatedAt(dto.getCreatedAt().toLocalDateTime());
+        }
+        if (dto.getUpdatedAt() != null) {
+            patient.setUpdatedAt(dto.getUpdatedAt().toLocalDateTime());
+        }
         return patient;
     }
 
@@ -36,9 +45,9 @@ public class PatientMapper {
                 .gender(patient.getGender())
                 .age(String.valueOf(patient.getAge()))
                 .email(patient.getEmail())
-                .phoneNumber(patient.getPhoneNumber());
-        // .createdAt(patient.getCreatedAt())
-        // .updatedAt(patient.getUpdatedAt());
+                .phoneNumber(patient.getPhoneNumber())
+                .createdAt(patient.getCreatedAt() != null ? OffsetDateTime.of(patient.getCreatedAt(), OffsetDateTime.now().getOffset()) : null)
+                .updatedAt(patient.getUpdatedAt() != null ? OffsetDateTime.of(patient.getUpdatedAt(), OffsetDateTime.now().getOffset()) : null);
     }
 
     public static List<PatientDto> toDtos(List<Patient> patients) {

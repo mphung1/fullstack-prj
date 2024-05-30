@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -29,6 +29,7 @@ import {
 import { usePatient } from "../context/PatientContext";
 import api from "../api";
 import { Patient } from "../utils/types";
+import useKeyPress from "../hooks/useKeyPress";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +48,14 @@ const Dashboard: React.FC = () => {
   const [filterAge, setFilterAge] = useState<string>("");
   const [filterEmail, setFilterEmail] = useState<string>("");
   const [filterPhoneNumber, setFilterPhoneNumber] = useState<string>("");
+
+  const filterButtonRef = useRef<HTMLButtonElement>(null);
+
+  useKeyPress("Enter", () => {
+    if (filterButtonRef.current) {
+      filterButtonRef.current.click();
+    }
+  });
 
   const loadPatients = async (page: number, size: number, filters: any) => {
     try {
@@ -211,7 +220,12 @@ const Dashboard: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12} sm={1}>
-          <Button variant="contained" color="primary" onClick={applyFilters}>
+          <Button
+            ref={filterButtonRef}
+            variant="contained"
+            color="primary"
+            onClick={applyFilters}
+          >
             Filter
           </Button>
         </Grid>

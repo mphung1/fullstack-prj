@@ -1,13 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Typography, Button, Grid, Paper } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Button,
+  Grid,
+  Paper,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { usePatient } from "../context/PatientContext";
 import api from "../api";
+import axios, { AxiosError } from "axios";
 
 const EditPatientConfirm: React.FC = () => {
   const navigate = useNavigate();
   const { patient } = usePatient();
   const [isSaved, setIsSaved] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   const handleBack = () => {
     navigate("/edit-patient");
@@ -15,16 +29,32 @@ const EditPatientConfirm: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const response = await api.post("/patients", patient);
-      console.log("Patient created:", response.data);
+      const response = await api.put(`/patients/${patient.patientId}`, patient);
+      console.log("Patient updated:", response.data);
       setIsSaved(true);
+      setSnackbarMessage("Patient updated successfully!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
     } catch (error) {
-      console.error("Error creating patient", error);
+      if (axios.isAxiosError(error)) {
+        setSnackbarMessage(
+          "Error updating patient: " + (error.response?.data || error.message)
+        );
+      } else {
+        setSnackbarMessage("Error updating patient: " + String(error));
+      }
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      console.error("Error updating patient", error);
     }
   };
 
   const handleGoHome = () => {
     navigate("/");
+  };
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   };
 
   if (isSaved) {
@@ -76,6 +106,19 @@ const EditPatientConfirm: React.FC = () => {
           </Button>
         </Grid>
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

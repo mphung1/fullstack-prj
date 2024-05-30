@@ -11,50 +11,18 @@ paths:
       description: Get all patients with optional filters
       operationId: getAllPatients
       tags:
-      - 'patients'
+        - "patients"
       parameters:
-        - name: page
+        - name: criteria
           in: query
           required: false
           schema:
-            type: integer
-            default: 0
-        - name: size
+            $ref: "#/components/schemas/PatientInfoCriteria"
+        - name: pageable
           in: query
           required: false
           schema:
-            type: integer
-            default: 5
-        - name: patientId
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: name
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: gender
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: age
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: email
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: phoneNumber
-          in: query
-          required: false
-          schema:
-            type: string
+            $ref: "#/components/schemas/Pageable"
       responses:
         200:
           description: Successful operation
@@ -66,7 +34,7 @@ paths:
       description: Create a new patient
       operationId: createPatient
       tags:
-        - 'patients'
+        - "patients"
       requestBody:
         required: true
         content:
@@ -85,7 +53,7 @@ paths:
       description: Get a patient by ID
       operationId: getPatientById
       tags:
-        - 'patients'
+        - "patients"
       parameters:
         - name: id
           in: path
@@ -105,7 +73,7 @@ paths:
       description: Update a patient by ID
       operationId: updatePatient
       tags:
-        - 'patients'
+        - "patients"
       parameters:
         - name: id
           in: path
@@ -131,7 +99,7 @@ paths:
       description: Delete a patient by ID
       operationId: deletePatient
       tags:
-        - 'patients'
+        - "patients"
       parameters:
         - name: id
           in: path
@@ -143,6 +111,21 @@ paths:
           description: Patient deleted
 components:
   schemas:
+    PatientInfoCriteria:
+      type: object
+      properties:
+        patientId:
+          type: string
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
     PatientDto:
       type: object
       required:
@@ -164,6 +147,19 @@ components:
           type: string
         phoneNumber:
           type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
     PagePatientDto:
       type: object
       properties:
@@ -171,8 +167,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PatientDto"
-        pageable:
-          type: object
         totalPages:
           type: integer
         totalElements:
@@ -180,6 +174,4 @@ components:
         number:
           type: integer
         size:
-          type: integer
-        numberOfElements:
           type: integer

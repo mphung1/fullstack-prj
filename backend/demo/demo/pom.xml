@@ -119,7 +119,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.20</version>
+			<!--			<version>42.2.20</version>-->
 		</dependency>
 		<!--		&lt;!&ndash; https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api
 		&ndash;&gt;-->
