@@ -1,0 +1,185 @@
+openapi: "3.0.3"
+info:
+  title: "Patient Management API"
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+    description: Development server
+paths:
+  /patients:
+    get:
+      description: Get all patients with optional filters
+      operationId: getAllPatients
+      tags:
+      - 'patients'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+        - name: patientId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: gender
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: age
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: phoneNumber
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PagePatientDto"
+    post:
+      description: Create a new patient
+      operationId: createPatient
+      tags:
+        - 'patients'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientDto"
+      responses:
+        201:
+          description: Created patient
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientDto"
+  /patients/{id}:
+    get:
+      description: Get a patient by ID
+      operationId: getPatientById
+      tags:
+        - 'patients'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Patient details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientDto"
+        404:
+          description: Patient not found
+    put:
+      description: Update a patient by ID
+      operationId: updatePatient
+      tags:
+        - 'patients'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientDto"
+      responses:
+        200:
+          description: Updated patient
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientDto"
+        404:
+          description: Patient not found
+    delete:
+      description: Delete a patient by ID
+      operationId: deletePatient
+      tags:
+        - 'patients'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Patient deleted
+components:
+  schemas:
+    PatientDto:
+      type: object
+      required:
+        - patientId
+        - name
+        - gender
+        - age
+        - phoneNumber
+      properties:
+        patientId:
+          type: integer
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+    PagePatientDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/PatientDto"
+        pageable:
+          type: object
+        totalPages:
+          type: integer
+        totalElements:
+          type: integer
+        number:
+          type: integer
+        size:
+          type: integer
+        numberOfElements:
+          type: integer

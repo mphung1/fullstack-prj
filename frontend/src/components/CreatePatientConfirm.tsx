@@ -46,12 +46,12 @@ const CreatePatientConfirm: React.FC = () => {
         Confirm New Patient
       </Typography>
       <Paper style={{ padding: "20px" }}>
-        <Typography variant="h6">Name: {patient.name}</Typography>
-        <Typography variant="h6">Gender: {patient.gender}</Typography>
-        <Typography variant="h6">Age: {patient.age}</Typography>
+        <Typography variant="h6">Name *: {patient.name}</Typography>
+        <Typography variant="h6">Gender *: {patient.gender}</Typography>
+        <Typography variant="h6">Age *: {patient.age}</Typography>
         <Typography variant="h6">Email: {patient.email}</Typography>
         <Typography variant="h6">
-          Phone number: {patient.phoneNumber}
+          Phone number *: {patient.phoneNumber}
         </Typography>
       </Paper>
       <Grid

@@ -157,6 +157,15 @@ const Dashboard: React.FC = () => {
       >
         <Grid item xs={12} sm={2}>
           <TextField
+            label="Patient ID"
+            value={filterPatientId}
+            onChange={(e) => handleFilterChange(e, setFilterPatientId)}
+            fullWidth
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={2}>
+          <TextField
             label="Name"
             value={filterName}
             onChange={(e) => handleFilterChange(e, setFilterName)}
@@ -211,6 +220,7 @@ const Dashboard: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Gender</TableCell>
               <TableCell>Age</TableCell>
@@ -222,6 +232,7 @@ const Dashboard: React.FC = () => {
           <TableBody>
             {patients.map((patient) => (
               <TableRow key={patient.patientId}>
+                <TableCell>{patient.patientId}</TableCell>
                 <TableCell>{patient.name}</TableCell>
                 <TableCell>{patient.gender}</TableCell>
                 <TableCell>{patient.age}</TableCell>

@@ -13,12 +13,34 @@ import { usePatient } from "../context/PatientContext";
 const EditPatient: React.FC = () => {
   const navigate = useNavigate();
   const { patient, setPatient } = usePatient();
+  const [errors, setErrors] = React.useState({
+    name: false,
+    gender: false,
+    age: false,
+    phoneNumber: false,
+  });
 
   const handleCancel = () => {
     navigate("/");
   };
 
-  const handleNext = () => {
+  const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newErrors = {
+      name: !patient.name,
+      gender: !patient.gender,
+      age: !patient.age,
+      phoneNumber: !patient.phoneNumber,
+    };
+
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some((error) => error);
+    if (hasErrors) {
+      return;
+    }
+
     navigate("/edit-patient-confirm");
   };
 
@@ -27,6 +49,10 @@ const EditPatient: React.FC = () => {
     setPatient((prevPatient) => ({
       ...prevPatient,
       [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: false,
     }));
   };
 

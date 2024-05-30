@@ -13,4 +13,6 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
     Page<Patient> findAll(Pageable pageable);
+    boolean existsByEmail(String email);
+    boolean existsByPhoneNumber(String phoneNumber);
 }

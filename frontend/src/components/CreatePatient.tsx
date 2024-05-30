@@ -13,6 +13,12 @@ import { usePatient } from "../context/PatientContext";
 const CreatePatient: React.FC = () => {
   const navigate = useNavigate();
   const { patient, setPatient } = usePatient();
+  const [errors, setErrors] = React.useState({
+    name: false,
+    gender: false,
+    age: false,
+    phoneNumber: false,
+  });
 
   const handleCancel = () => {
     navigate("/");
@@ -20,6 +26,21 @@ const CreatePatient: React.FC = () => {
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const newErrors = {
+      name: !patient.name,
+      gender: !patient.gender,
+      age: !patient.age,
+      phoneNumber: !patient.phoneNumber,
+    };
+
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some((error) => error);
+    if (hasErrors) {
+      return;
+    }
+
     navigate("/create-patient-confirm");
   };
 
@@ -28,6 +49,10 @@ const CreatePatient: React.FC = () => {
     setPatient((prevPatient) => ({
       ...prevPatient,
       [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: false,
     }));
   };
 
@@ -39,21 +64,25 @@ const CreatePatient: React.FC = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
-            label="Name"
+            label="Name *"
             fullWidth
             name="name"
             value={patient.name}
             onChange={handleChange}
+            error={errors.name}
+            helperText={errors.name ? "Name is required" : ""}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             select
-            label="Gender"
+            label="Gender *"
             fullWidth
             name="gender"
             value={patient.gender}
             onChange={handleChange}
+            error={errors.gender}
+            helperText={errors.gender ? "Gender is required" : ""}
           >
             <MenuItem value="Male">Male</MenuItem>
             <MenuItem value="Female">Female</MenuItem>
@@ -62,11 +91,13 @@ const CreatePatient: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Age"
+            label="Age *"
             fullWidth
             name="age"
             value={patient.age}
             onChange={handleChange}
+            error={errors.age}
+            helperText={errors.age ? "Age is required" : ""}
           />
         </Grid>
         <Grid item xs={12}>
@@ -80,11 +111,13 @@ const CreatePatient: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Phone number"
+            label="Phone number *"
             fullWidth
             name="phoneNumber"
             value={patient.phoneNumber}
             onChange={handleChange}
+            error={errors.phoneNumber}
+            helperText={errors.phoneNumber ? "Phone number is required" : ""}
           />
         </Grid>
         <Grid
