@@ -40,7 +40,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatientDto"
+              $ref: "#/components/schemas/CreatePatientRequest"
       responses:
         201:
           description: Created patient
@@ -130,7 +130,44 @@ components:
           type: string
         phoneNumber:
           type: string
-          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
+    CreatePatientRequest:
+      type: object
+      required:
+        - name
+        - gender
+        - age
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
+    UpdatePatientRequest:
+      type: object
+      required:
+        - name
+        - gender
+        - age
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          type: string
+          format: int
+        email:
+          type: string
+        phoneNumber:
+          type: string
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
     PatientDto:
       type: object
       required:
@@ -152,32 +189,13 @@ components:
           type: string
         phoneNumber:
           type: string
-          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-    UpdatePatientRequest:
-      type: object
-      required:
-        - name
-        - gender
-        - age
-      properties:
-        name:
-          type: string
-        gender:
-          type: string
-        age:
-          type: string
-          format: int
-        email:
-          type: string
-        phoneNumber:
-          type: string
-          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
     Pageable:
       type: object
       properties:

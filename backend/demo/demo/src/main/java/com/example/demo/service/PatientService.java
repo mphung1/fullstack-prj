@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.baeldung.openapi.model.CreatePatientRequest;
 import com.baeldung.openapi.model.PatientDto;
 import com.baeldung.openapi.model.PatientInfoCriteria;
 import com.baeldung.openapi.model.UpdatePatientRequest;
@@ -11,7 +12,7 @@ public interface PatientService {
 
     PatientDto getPatientById(Long id);
 
-    PatientDto createPatient(PatientDto patientDto);
+    PatientDto createPatient(CreatePatientRequest patientDto);
 
     PatientDto updatePatient(Long id, UpdatePatientRequest patientDto);
 

@@ -20,7 +20,7 @@ public class PatientsApiImpl implements PatientsApiDelegate {
 
 
     @Override
-    public ResponseEntity<PatientDto> createPatient(PatientDto patientDto) {
+    public ResponseEntity<PatientDto> createPatient(CreatePatientRequest patientDto) {
         try {
             return ResponseEntity.status(201).body(patientService.createPatient(patientDto));
         } catch (IllegalArgumentException e) {

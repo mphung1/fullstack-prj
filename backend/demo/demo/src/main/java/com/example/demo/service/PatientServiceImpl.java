@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.baeldung.openapi.model.CreatePatientRequest;
 import com.baeldung.openapi.model.PatientDto;
 import com.baeldung.openapi.model.PatientInfoCriteria;
 import com.baeldung.openapi.model.UpdatePatientRequest;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Slf4j
@@ -38,9 +40,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDto createPatient(@Valid PatientDto patientDto) {
+    public PatientDto createPatient(@Valid CreatePatientRequest patientDto) {
         validatePatientInfo(patientDto.getEmail(), patientDto.getPhoneNumber(), null);
         Patient patient = PatientMapper.toEntity(patientDto);
+        patient.setCreatedAt(LocalDateTime.now());
+        patient.setUpdatedAt(LocalDateTime.now());
         return PatientMapper.toDto(patientRepository.save(patient));
     }
 
@@ -76,7 +80,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     private void validatePatientInfo(String email, String phoneNumber, Long currentPatientId) {
-//        log.info("validatePatientInfo: {}", currentPatientId);
         if (email != null && !email.isEmpty()) {
             checkEmailAvailability(email, currentPatientId);
         }

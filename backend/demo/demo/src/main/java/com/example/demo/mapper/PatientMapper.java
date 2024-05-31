@@ -1,5 +1,6 @@
 package com.example.demo.mapper;
 
+import com.baeldung.openapi.model.CreatePatientRequest;
 import com.baeldung.openapi.model.PatientDto;
 import com.example.demo.model.Patient;
 import org.springframework.data.domain.Page;
@@ -14,25 +15,25 @@ import java.util.stream.Collectors;
 
 public interface PatientMapper {
 
-    public static Patient toEntity(PatientDto dto) {
-        if (dto == null) {
+    public static Patient toEntity(CreatePatientRequest request) {
+        if (request == null) {
             return null;
         }
         Patient patient = new Patient();
-        if (dto.getPatientId() != null) {
-            patient.setPatientId(dto.getPatientId());
-        }
-        patient.setName(dto.getName());
-        patient.setGender(dto.getGender());
-        patient.setAge(Integer.parseInt(dto.getAge()));
-        patient.setEmail(dto.getEmail());
-        patient.setPhoneNumber(String.valueOf(dto.getPhoneNumber()));
-        if (dto.getCreatedAt() != null) {
-            patient.setCreatedAt(dto.getCreatedAt().toLocalDateTime());
-        }
-        if (dto.getUpdatedAt() != null) {
-            patient.setUpdatedAt(dto.getUpdatedAt().toLocalDateTime());
-        }
+//        if (dto.getPatientId() != null) {
+//            patient.setPatientId(dto.getPatientId());
+//        }
+        patient.setName(request.getName());
+        patient.setGender(request.getGender());
+        patient.setAge(Integer.parseInt(request.getAge()));
+        patient.setEmail(request.getEmail());
+        patient.setPhoneNumber(String.valueOf(request.getPhoneNumber()));
+//        if (dto.getCreatedAt() != null) {
+//            patient.setCreatedAt(dto.getCreatedAt().toLocalDateTime());
+//        }
+//        if (dto.getUpdatedAt() != null) {
+//            patient.setUpdatedAt(dto.getUpdatedAt().toLocalDateTime());
+//        }
         return patient;
     }
 
