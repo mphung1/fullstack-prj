@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 const ApiClient = {
-  getPatients: (page: number, size: number, filters: any) => {
+  getPatients: (page: number, size: number, filters: Patient) => {
     return api.get("/patients", {
       params: {
         page: page - 1,

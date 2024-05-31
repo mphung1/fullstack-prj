@@ -1,14 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-
-interface Patient {
-  patientId?: string;
-  name: string;
-  gender: string;
-  age: string;
-  email?: string;
-  phoneNumber: string;
-}
-
+import { Patient } from "../utils/types";
 interface PatientContextType {
   patient: Patient;
   setPatient: React.Dispatch<React.SetStateAction<Patient>>;
