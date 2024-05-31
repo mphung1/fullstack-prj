@@ -1,12 +1,11 @@
-// src/context/PatientContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface Patient {
-  patientId: string;
+  patientId?: string;
   name: string;
   gender: string;
   age: string;
-  email: string;
+  email?: string;
   phoneNumber: string;
 }
 
@@ -14,6 +13,7 @@ interface PatientContextType {
   patient: Patient;
   setPatient: React.Dispatch<React.SetStateAction<Patient>>;
   setEditingPatient: (patient: Patient) => void;
+  resetPatient: () => void;
 }
 
 const PatientContext = createContext<PatientContextType | undefined>(undefined);
@@ -38,8 +38,21 @@ export const PatientProvider: React.FC<PatientProviderProps> = ({
     setPatient(patient);
   };
 
+  const resetPatient = () => {
+    setPatient({
+      patientId: "",
+      name: "",
+      gender: "",
+      age: "",
+      email: "",
+      phoneNumber: "",
+    });
+  };
+
   return (
-    <PatientContext.Provider value={{ patient, setPatient, setEditingPatient }}>
+    <PatientContext.Provider
+      value={{ patient, setPatient, setEditingPatient, resetPatient }}
+    >
       {children}
     </PatientContext.Provider>
   );

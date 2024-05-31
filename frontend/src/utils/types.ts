@@ -1,10 +1,10 @@
 export interface Patient {
-  patientId: string;
+  patientId?: string;
   name: string;
   gender: string;
-  age: number;
+  age: string;
   email?: string;
-  phoneNumber: string;
-  createdAt: string;
-  updatedAt: string;
+  phoneNumber?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

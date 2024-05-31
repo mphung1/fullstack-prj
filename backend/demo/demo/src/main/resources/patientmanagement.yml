@@ -3,7 +3,7 @@ info:
   title: "Patient Management API"
   version: 1.0.0
 servers:
-  - url: http://localhost:8081
+  - url: http://localhost:8080
     description: Development server
 paths:
   /patients:
@@ -60,6 +60,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         200:
           description: Patient details
@@ -80,12 +81,13 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatientDto"
+              $ref: "#/components/schemas/UpdatePatientRequest"
       responses:
         200:
           description: Updated patient
@@ -106,6 +108,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         204:
           description: Patient deleted
@@ -115,7 +118,8 @@ components:
       type: object
       properties:
         patientId:
-          type: string
+          type: integer
+          format: int64
         name:
           type: string
         gender:
@@ -126,6 +130,7 @@ components:
           type: string
         phoneNumber:
           type: string
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
     PatientDto:
       type: object
       required:
@@ -133,10 +138,10 @@ components:
         - name
         - gender
         - age
-        - phoneNumber
       properties:
         patientId:
           type: integer
+          format: int64
         name:
           type: string
         gender:
@@ -147,12 +152,32 @@ components:
           type: string
         phoneNumber:
           type: string
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+    UpdatePatientRequest:
+      type: object
+      required:
+        - name
+        - gender
+        - age
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          type: string
+          format: int
+        email:
+          type: string
+        phoneNumber:
+          type: string
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$"
     Pageable:
       type: object
       properties:

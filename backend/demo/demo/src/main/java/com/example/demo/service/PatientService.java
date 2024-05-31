@@ -2,23 +2,18 @@ package com.example.demo.service;
 
 import com.baeldung.openapi.model.PatientDto;
 import com.baeldung.openapi.model.PatientInfoCriteria;
-import com.example.demo.mapper.PatientMapper;
-import com.example.demo.model.Patient;
-import com.example.demo.specification.PatientSpecification;
+import com.baeldung.openapi.model.UpdatePatientRequest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 
 public interface PatientService {
-    public Page<PatientDto> getFilteredPatients(Pageable pageable, PatientInfoCriteria patientInfoCriteria);
+    Page<PatientDto> getAllPatients(Pageable pageable, PatientInfoCriteria patientInfoCriteria);
 
-    public Page<PatientDto> getAllPatients(Pageable pageable);
+    PatientDto getPatientById(Long id);
 
-    public PatientDto getPatientById(Long id);
+    PatientDto createPatient(PatientDto patientDto);
 
-    public PatientDto savePatient(PatientDto patientDto);
+    PatientDto updatePatient(Long id, UpdatePatientRequest patientDto);
 
-    public void deletePatient(Long id);
+    void deletePatient(Long id);
 }

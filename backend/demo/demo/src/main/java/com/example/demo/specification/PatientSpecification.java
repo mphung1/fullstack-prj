@@ -1,25 +1,38 @@
 package com.example.demo.specification;
 
+import com.baeldung.openapi.model.PatientInfoCriteria;
 import com.example.demo.model.Patient;
+import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 
+@UtilityClass
 public class PatientSpecification {
-    public static Specification<Patient> hasPatientId(String patientId) {
-        return (root, query, criteriaBuilder) -> 
-            (patientId == null || patientId.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("patientId"), patientId);
+
+    public Specification<Patient> byCriteria(PatientInfoCriteria criteria) {
+        return  Specification.where(PatientSpecification.hasPatientId(criteria.getPatientId()))
+                .and(PatientSpecification.hasName(criteria.getName()))
+                .and(PatientSpecification.hasGender(criteria.getGender()))
+                .and(PatientSpecification.hasAge(criteria.getAge()))
+                .and(PatientSpecification.hasEmail(criteria.getEmail()))
+                .and(PatientSpecification.hasPhoneNumber(String.valueOf(criteria.getPhoneNumber())));
     }
 
-    public static Specification<Patient> hasName(String name) {
-        return (root, query, criteriaBuilder) -> 
-            (name == null || name.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%");
+    private Specification<Patient> hasPatientId(Long patientId) {
+        return (root, query, criteriaBuilder) ->
+                (patientId == null) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("patientId"), patientId);
     }
 
-    public static Specification<Patient> hasGender(String gender) {
-        return (root, query, criteriaBuilder) -> 
-            (gender == null || gender.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("gender"), gender);
+    private Specification<Patient> hasName(String name) {
+        return (root, query, criteriaBuilder) ->
+                (name == null || name.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
-    public static Specification<Patient> hasAge(String age) {
+    private Specification<Patient> hasGender(String gender) {
+        return (root, query, criteriaBuilder) ->
+                (gender == null || gender.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("gender"), gender);
+    }
+
+    private Specification<Patient> hasAge(String age) {
         return (root, query, criteriaBuilder) -> {
             if (age == null || age.isEmpty()) {
                 return criteriaBuilder.conjunction();
@@ -32,13 +45,13 @@ public class PatientSpecification {
         };
     }
 
-    public static Specification<Patient> hasEmail(String email) {
-        return (root, query, criteriaBuilder) -> 
-            (email == null || email.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), "%" + email.toLowerCase() + "%");
+    private Specification<Patient> hasEmail(String email) {
+        return (root, query, criteriaBuilder) ->
+                (email == null || email.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), "%" + email.toLowerCase() + "%");
     }
 
-    public static Specification<Patient> hasPhoneNumber(String phoneNumber) {
-        return (root, query, criteriaBuilder) -> 
-            (phoneNumber == null || phoneNumber.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.like(criteriaBuilder.lower(root.get("phoneNumber")), "%" + phoneNumber.toLowerCase() + "%");
+    private Specification<Patient> hasPhoneNumber(String phoneNumber) {
+        return (root, query, criteriaBuilder) ->
+                (phoneNumber == null || phoneNumber.isEmpty()) ? criteriaBuilder.conjunction() : criteriaBuilder.like(criteriaBuilder.lower(root.get("phoneNumber")), "%" + phoneNumber.toLowerCase() + "%");
     }
 }

@@ -16,9 +16,6 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
     Page<Patient> findAll(Pageable pageable);
-    boolean existsByEmail(String email);
-    boolean existsByPhoneNumber(String phoneNumber);
-
     Optional<Patient> findByEmail(String email);
     Optional<Patient> findByPhoneNumber(String phoneNumber);
 }

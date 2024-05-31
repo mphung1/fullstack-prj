@@ -10,8 +10,8 @@ import {
   Alert,
 } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
-import api from "../api";
-import axios, { AxiosError } from "axios";
+import ApiClient from "../apiClient";
+import axios from "axios";
 
 const EditPatientConfirm: React.FC = () => {
   const navigate = useNavigate();
@@ -27,9 +27,26 @@ const EditPatientConfirm: React.FC = () => {
     navigate("/edit-patient");
   };
 
+  const validatePhoneNumber = (phoneNumber: string) => {
+    const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+    return (
+      phoneNumber === null || phoneNumber === "" || phoneRegex.test(phoneNumber)
+    );
+  };
+
   const handleSave = async () => {
+    if (!validatePhoneNumber(patient.phoneNumber)) {
+      setSnackbarMessage("Phone number must contain only numeric characters");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
     try {
-      const response = await api.put(`/patients/${patient.patientId}`, patient);
+      const response = await ApiClient.updatePatient(
+        Number(patient.patientId),
+        patient
+      );
       console.log("Patient updated:", response.data);
       setIsSaved(true);
       setSnackbarMessage("Patient updated successfully!");
@@ -63,12 +80,7 @@ const EditPatientConfirm: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Congrats! Patient was edited
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleGoHome}
-          style={{ marginTop: "20px" }}
-        >
+        <Button variant="contained" color="primary" onClick={handleGoHome}>
           Go Home
         </Button>
       </Container>
@@ -78,12 +90,12 @@ const EditPatientConfirm: React.FC = () => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        Confirm Edited Patient
+        Confirm Edit Patient
       </Typography>
       <Paper style={{ padding: "20px" }}>
-        <Typography variant="h6">Name: {patient.name}</Typography>
-        <Typography variant="h6">Gender: {patient.gender}</Typography>
-        <Typography variant="h6">Age: {patient.age}</Typography>
+        <Typography variant="h6">Name*: {patient.name}</Typography>
+        <Typography variant="h6">Gender*: {patient.gender}</Typography>
+        <Typography variant="h6">Age*: {patient.age}</Typography>
         <Typography variant="h6">Email: {patient.email}</Typography>
         <Typography variant="h6">
           Phone number: {patient.phoneNumber}

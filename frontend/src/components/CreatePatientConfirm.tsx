@@ -10,8 +10,8 @@ import {
   Alert,
 } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
-import api from "../api";
-import axios, { AxiosError } from "axios";
+import ApiClient from "../apiClient";
+import axios from "axios";
 
 const CreatePatientConfirm: React.FC = () => {
   const navigate = useNavigate();
@@ -27,9 +27,23 @@ const CreatePatientConfirm: React.FC = () => {
     navigate("/create-patient");
   };
 
+  const validatePhoneNumber = (phoneNumber: string) => {
+    const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+    return (
+      phoneNumber === null || phoneNumber === "" || phoneRegex.test(phoneNumber)
+    );
+  };
+
   const handleSave = async () => {
+    if (!validatePhoneNumber(patient.phoneNumber)) {
+      setSnackbarMessage("Phone number must contain only numeric characters");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
     try {
-      const response = await api.post("/patients", patient);
+      const response = await ApiClient.createPatient(patient);
       console.log("Patient created:", response.data);
       setIsSaved(true);
       setSnackbarMessage("Patient created successfully!");
@@ -76,12 +90,12 @@ const CreatePatientConfirm: React.FC = () => {
         Confirm New Patient
       </Typography>
       <Paper style={{ padding: "20px" }}>
-        <Typography variant="h6">Name *: {patient.name}</Typography>
-        <Typography variant="h6">Gender *: {patient.gender}</Typography>
-        <Typography variant="h6">Age *: {patient.age}</Typography>
+        <Typography variant="h6">Name*: {patient.name}</Typography>
+        <Typography variant="h6">Gender*: {patient.gender}</Typography>
+        <Typography variant="h6">Age*: {patient.age}</Typography>
         <Typography variant="h6">Email: {patient.email}</Typography>
         <Typography variant="h6">
-          Phone number *: {patient.phoneNumber}
+          Phone number: {patient.phoneNumber}
         </Typography>
       </Paper>
       <Grid

@@ -5,6 +5,7 @@ import com.example.demo.model.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,13 +20,13 @@ public interface PatientMapper {
         }
         Patient patient = new Patient();
         if (dto.getPatientId() != null) {
-            patient.setPatientId(Long.valueOf(dto.getPatientId()));
+            patient.setPatientId(dto.getPatientId());
         }
         patient.setName(dto.getName());
         patient.setGender(dto.getGender());
         patient.setAge(Integer.parseInt(dto.getAge()));
         patient.setEmail(dto.getEmail());
-        patient.setPhoneNumber(dto.getPhoneNumber());
+        patient.setPhoneNumber(String.valueOf(dto.getPhoneNumber()));
         if (dto.getCreatedAt() != null) {
             patient.setCreatedAt(dto.getCreatedAt().toLocalDateTime());
         }
@@ -40,7 +41,7 @@ public interface PatientMapper {
             return null;
         }
         return new PatientDto()
-                .patientId(Math.toIntExact(patient.getPatientId()))
+                .patientId(patient.getPatientId())
                 .name(patient.getName())
                 .gender(patient.getGender())
                 .age(String.valueOf(patient.getAge()))

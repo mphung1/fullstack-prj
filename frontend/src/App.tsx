@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";

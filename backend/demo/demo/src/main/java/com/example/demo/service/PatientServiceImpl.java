@@ -1,98 +1,106 @@
- package com.example.demo.service;
+package com.example.demo.service;
 
- import com.baeldung.openapi.model.PatientDto;
- import com.baeldung.openapi.model.PatientInfoCriteria;
- import com.example.demo.exception.PatientNotFoundException;
- import com.example.demo.exception.EmailExistsException;
- import com.example.demo.exception.PhoneNumExistsException;
- import com.example.demo.mapper.PatientMapper;
- import com.example.demo.model.Patient;
- import com.example.demo.repository.PatientRepository;
- import com.example.demo.specification.PatientSpecification;
- import lombok.RequiredArgsConstructor;
- import org.springframework.data.domain.Page;
- import org.springframework.data.domain.PageRequest;
- import org.springframework.data.domain.Pageable;
- import org.springframework.data.domain.Sort;
- import org.springframework.data.jpa.domain.Specification;
- import org.springframework.stereotype.Service;
+import com.baeldung.openapi.model.PatientDto;
+import com.baeldung.openapi.model.PatientInfoCriteria;
+import com.baeldung.openapi.model.UpdatePatientRequest;
+import com.example.demo.exception.PatientNotFoundException;
+import com.example.demo.exception.EmailExistsException;
+import com.example.demo.exception.PhoneNumExistsException;
+import com.example.demo.exception.PhoneNumFormatException;
+import com.example.demo.mapper.PatientMapper;
+import com.example.demo.model.Patient;
+import com.example.demo.repository.PatientRepository;
+import com.example.demo.specification.PatientSpecification;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
- import java.util.Optional;
+import javax.validation.Valid;
+import java.util.Objects;
 
- @Service
- @RequiredArgsConstructor
- public class PatientServiceImpl implements PatientService {
-     private final PatientRepository patientRepository;
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class PatientServiceImpl implements PatientService {
 
-     private void checkEmailAvailability(String email, Long currentPatientId) {
-         Optional<Patient> existingPatient = patientRepository.findByEmail(email);
-         if (existingPatient.isPresent() && !existingPatient.get().getPatientId().equals(currentPatientId)) {
-             throw new EmailExistsException("Email already in use");
-         }
-     }
+    private final PatientRepository patientRepository;
 
-     private void checkPhoneNumberAvailability(String phoneNumber, Long currentPatientId) {
-         Optional<Patient> existingPatient = patientRepository.findByPhoneNumber(phoneNumber);
-         if (existingPatient.isPresent() && !existingPatient.get().getPatientId().equals(currentPatientId)) {
-             throw new PhoneNumExistsException("Phone number already in use");
-         }
-     }
+    @Override
+    public Page<PatientDto> getAllPatients(Pageable pageable, PatientInfoCriteria criteria) {
 
-     @Override
-     public Page<PatientDto> getFilteredPatients(Pageable pageable, PatientInfoCriteria criteria) {
-         Specification<Patient> spec = Specification.where(PatientSpecification.hasPatientId(criteria.getPatientId()))
-                 .and(PatientSpecification.hasName(criteria.getName()))
-                 .and(PatientSpecification.hasGender(criteria.getGender()))
-                 .and(PatientSpecification.hasAge(criteria.getAge()))
-                 .and(PatientSpecification.hasEmail(criteria.getEmail()))
-                 .and(PatientSpecification.hasPhoneNumber(criteria.getPhoneNumber()));
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("patientId").ascending());
+        Page<Patient> patientPage = patientRepository.findAll(PatientSpecification.byCriteria(criteria), sortedPageable);
+        return PatientMapper.toDtoPage(patientPage);
+    }
 
-         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("patientId").ascending());
-         Page<Patient> patientPage = patientRepository.findAll(spec, sortedPageable);
-         return PatientMapper.toDtoPage(patientPage);
-     }
+    @Override
+    public PatientDto createPatient(@Valid PatientDto patientDto) {
+        validatePatientInfo(patientDto.getEmail(), patientDto.getPhoneNumber(), null);
+        Patient patient = PatientMapper.toEntity(patientDto);
+        return PatientMapper.toDto(patientRepository.save(patient));
+    }
 
-     @Override
-     public Page<PatientDto> getAllPatients(Pageable pageable) {
-         Page<Patient> patientPage = patientRepository.findAll(pageable);
-         return PatientMapper.toDtoPage(patientPage);
-     }
+    @Override
+    public PatientDto updatePatient(Long id, @Valid UpdatePatientRequest patientDto) {
+        Patient existingPatient = patientRepository.findById(id).orElse(null);
+        if (existingPatient == null) {
+            throw new PatientNotFoundException("Patient not found with id: " + id);
+        }
 
-     @Override
-     public PatientDto getPatientById(Long id) {
-         return PatientMapper.toDto(patientRepository.findById(id).orElse(null));
-     }
+        validatePatientInfo(patientDto.getEmail(), patientDto.getPhoneNumber(), id);
 
-     @Override
-     public PatientDto savePatient(PatientDto patientDto) {
-         if (patientDto.getPatientId() == null) { // Creation
-             checkEmailAvailability(patientDto.getEmail(), null);
-             checkPhoneNumberAvailability(patientDto.getPhoneNumber(), null);
-         } else { // Update
-             Optional<Patient> existingPatient = patientRepository.findById(patientDto.getPatientId().longValue());
-             if (existingPatient.isPresent()) {
-                 Patient existing = existingPatient.get();
-                 if (!existing.getEmail().equals(patientDto.getEmail())) {
-                     checkEmailAvailability(patientDto.getEmail(), patientDto.getPatientId().longValue());
-                 }
-                 if (!existing.getPhoneNumber().equals(patientDto.getPhoneNumber())) {
-                     checkPhoneNumberAvailability(patientDto.getPhoneNumber(), patientDto.getPatientId().longValue());
-                 }
-             } else {
-                 throw new IllegalArgumentException("Patient not found");
-             }
-         }
+        existingPatient.setName(patientDto.getName());
+        existingPatient.setGender(patientDto.getGender());
+        existingPatient.setAge(patientDto.getAge());
+        existingPatient.setEmail(patientDto.getEmail());
+        existingPatient.setPhoneNumber(patientDto.getPhoneNumber());
 
-         Patient patient = PatientMapper.toEntity(patientDto);
-         return PatientMapper.toDto(patientRepository.save(patient));
-     }
+        return PatientMapper.toDto(patientRepository.save(existingPatient));
+    }
 
-     @Override
-     public void deletePatient(Long id) {
-         if (!patientRepository.existsById(id)) {
-             throw new PatientNotFoundException("Patient not found with id: " + id);
-         }
-         patientRepository.deleteById(id);
-     }
- }
+    @Override
+    public PatientDto getPatientById(Long id) {
+        return PatientMapper.toDto(patientRepository.findById(id).orElse(null));
+    }
 
+    @Override
+    public void deletePatient(Long id) {
+        if (!patientRepository.existsById(id)) {
+            throw new PatientNotFoundException("Patient not found with id: " + id);
+        }
+        patientRepository.deleteById(id);
+    }
+
+    private void validatePatientInfo(String email, String phoneNumber, Long currentPatientId) {
+//        log.info("validatePatientInfo: {}", currentPatientId);
+        if (email != null && !email.isEmpty()) {
+            checkEmailAvailability(email, currentPatientId);
+        }
+
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            if (!phoneNumber.matches("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")) {
+                throw new PhoneNumFormatException("Phone number must contain only numeric characters");
+            }
+
+            checkPhoneNumberAvailability(phoneNumber, currentPatientId);
+        }
+    }
+
+    private void checkEmailAvailability(String email, Long currentPatientId) {
+        Patient existingPatient = patientRepository.findByEmail(email).orElse(null);
+        if (existingPatient != null && (!(Objects.equals(existingPatient.getPatientId(), currentPatientId)) || currentPatientId == 0)) {
+            throw new EmailExistsException("Email already in use");
+        }
+    }
+
+    private void checkPhoneNumberAvailability(String phoneNumber, Long currentPatientId) {
+        Patient existingPatient = patientRepository.findByPhoneNumber(phoneNumber).orElse(null);
+        if (existingPatient != null && (!(Objects.equals(existingPatient.getPatientId(), currentPatientId)) || currentPatientId == 0 )) {
+            throw new PhoneNumExistsException("Phone number already in use");
+        }
+    }
+}

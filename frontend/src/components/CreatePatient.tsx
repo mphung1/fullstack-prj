@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -9,18 +9,19 @@ import {
   Grid,
 } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
+import { ResetTvSharp } from "@mui/icons-material";
 
 const CreatePatient: React.FC = () => {
   const navigate = useNavigate();
-  const { patient, setPatient } = usePatient();
+  const { patient, setPatient, resetPatient } = usePatient();
   const [errors, setErrors] = React.useState({
     name: false,
     gender: false,
     age: false,
-    phoneNumber: false,
   });
 
   const handleCancel = () => {
+    resetPatient();
     navigate("/");
   };
 
@@ -31,7 +32,6 @@ const CreatePatient: React.FC = () => {
       name: !patient.name,
       gender: !patient.gender,
       age: !patient.age,
-      phoneNumber: !patient.phoneNumber,
     };
 
     setErrors(newErrors);
@@ -50,6 +50,7 @@ const CreatePatient: React.FC = () => {
       ...prevPatient,
       [name]: value,
     }));
+    // console.log(patient);
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: false,
@@ -111,13 +112,11 @@ const CreatePatient: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Phone number *"
+            label="Phone number"
             fullWidth
             name="phoneNumber"
             value={patient.phoneNumber}
             onChange={handleChange}
-            error={errors.phoneNumber}
-            helperText={errors.phoneNumber ? "Phone number is required" : ""}
           />
         </Grid>
         <Grid

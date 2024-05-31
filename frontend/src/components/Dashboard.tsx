@@ -25,11 +25,13 @@ import {
   Select,
   SelectChangeEvent,
   Box,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
-import api from "../api";
 import { Patient } from "../utils/types";
 import useKeyPress from "../hooks/useKeyPress";
+import ApiClient from "../apiClient";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -48,6 +50,11 @@ const Dashboard: React.FC = () => {
   const [filterAge, setFilterAge] = useState<string>("");
   const [filterEmail, setFilterEmail] = useState<string>("");
   const [filterPhoneNumber, setFilterPhoneNumber] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   const filterButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -59,18 +66,7 @@ const Dashboard: React.FC = () => {
 
   const loadPatients = async (page: number, size: number, filters: any) => {
     try {
-      const response = await api.get("/patients", {
-        params: {
-          page: page - 1,
-          size: size,
-          patientId: filters.patientId,
-          name: filters.name,
-          gender: filters.gender,
-          age: filters.age,
-          email: filters.email,
-          phoneNumber: filters.phoneNumber,
-        },
-      });
+      const response = await ApiClient.getPatients(page, size, filters);
       setPatients(response.data.content);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -80,7 +76,6 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     loadPatients(currentPage, Number(pageSize), {
-      size: pageSize,
       patientId: filterPatientId,
       name: filterName,
       gender: filterGender,
@@ -110,7 +105,7 @@ const Dashboard: React.FC = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await api.delete(`/patients/${selectedId}`);
+      await ApiClient.deletePatient(Number(selectedId));
       loadPatients(currentPage, Number(pageSize), {
         patientId: filterPatientId,
         name: filterName,
@@ -119,8 +114,16 @@ const Dashboard: React.FC = () => {
         email: filterEmail,
         phoneNumber: filterPhoneNumber,
       });
-    } catch (error) {
+      setSnackbarMessage("Patient deleted successfully!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+    } catch (error: any) {
       console.error("Error deleting patient", error);
+      setSnackbarMessage(
+        "Error deleting patient: " + (error.response?.data || error.message)
+      );
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     } finally {
       setOpen(false);
     }
@@ -151,8 +154,13 @@ const Dashboard: React.FC = () => {
       phoneNumber: filterPhoneNumber,
     });
   };
+
   const handlePageSizeChange = (event: SelectChangeEvent) => {
     setPageSize(event.target.value);
+  };
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -172,7 +180,6 @@ const Dashboard: React.FC = () => {
             fullWidth
           />
         </Grid>
-
         <Grid item xs={12} sm={2}>
           <TextField
             label="Name"
@@ -181,7 +188,6 @@ const Dashboard: React.FC = () => {
             fullWidth
           />
         </Grid>
-
         <Grid item xs={12} sm={2}>
           <TextField
             select
@@ -234,13 +240,13 @@ const Dashboard: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Gender</TableCell>
-              <TableCell>Age</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone number</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>NAME</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>GENDER</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>AGE</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>EMAIL</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>PHONE NUMBER</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -254,7 +260,13 @@ const Dashboard: React.FC = () => {
                 <TableCell>{patient.phoneNumber}</TableCell>
                 <TableCell>
                   <Button onClick={() => handleEdit(patient)}>Edit</Button>
-                  <Button onClick={() => handleDelete(patient.patientId)}>
+                  <Button
+                    onClick={() => {
+                      if (patient.patientId) {
+                        handleDelete(patient.patientId);
+                      }
+                    }}
+                  >
                     Delete
                   </Button>
                 </TableCell>
@@ -279,7 +291,6 @@ const Dashboard: React.FC = () => {
             Create Patient
           </Button>
         </Grid>
-
         <Grid item>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
@@ -326,6 +337,19 @@ const Dashboard: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

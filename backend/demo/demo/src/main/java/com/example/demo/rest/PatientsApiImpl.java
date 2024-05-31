@@ -1,19 +1,15 @@
 package com.example.demo.rest;
 
 import com.baeldung.openapi.api.PatientsApiDelegate;
-import com.baeldung.openapi.model.PagePatientDto;
-import com.baeldung.openapi.model.Pageable;
-import com.baeldung.openapi.model.PatientDto;
-import com.baeldung.openapi.model.PatientInfoCriteria;
+import com.baeldung.openapi.model.*;
 import com.example.demo.service.PatientServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+//import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
@@ -24,54 +20,39 @@ public class PatientsApiImpl implements PatientsApiDelegate {
 
 
     @Override
-    public ResponseEntity<PatientDto> createPatient(PatientDto patientDto) {  try {
-        PatientDto savedPatient = patientService.savePatient(patientDto);
-        return ResponseEntity.status(201).body(savedPatient);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(null);
-    }
+    public ResponseEntity<PatientDto> createPatient(PatientDto patientDto) {
+        try {
+            return ResponseEntity.status(201).body(patientService.createPatient(patientDto));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @Override
-    public ResponseEntity<Void> deletePatient(Integer id) {
-        patientService.deletePatient(Long.valueOf(id));
+    public ResponseEntity<Void> deletePatient(Long id) {
+        patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     public ResponseEntity<PagePatientDto> getAllPatients(PatientInfoCriteria criteria, Pageable pageable) {
-        Page<PatientDto> patientsPage = patientService.getFilteredPatients(
-                PageRequest.of(pageable.getPage(), pageable.getSize()),
-                criteria
-        );
 
-        PagePatientDto pagePatientDto = new PagePatientDto()
-                .content(patientsPage.getContent())
-                .totalElements((int) patientsPage.getTotalElements())
-                .totalPages(patientsPage.getTotalPages())
-                .number(patientsPage.getNumber())
-                .size(patientsPage.getSize());
-//                .numberOfElements(patientsPage.getNumberOfElements());
+        Page<PatientDto> patientsPage = patientService.getAllPatients(PageRequest.of(pageable.getPage(), pageable.getSize()), criteria);
+
+        PagePatientDto pagePatientDto = new PagePatientDto().content(patientsPage.getContent()).totalElements((int) patientsPage.getTotalElements()).totalPages(patientsPage.getTotalPages()).number(patientsPage.getNumber()).size(patientsPage.getSize());
 
         return ResponseEntity.ok(pagePatientDto);
     }
 
     @Override
-    public ResponseEntity<PatientDto> getPatientById(Integer id) {
-        PatientDto patientDto = patientService.getPatientById(Long.valueOf(id));
-        return ResponseEntity.of(Optional.ofNullable(patientDto));
+    public ResponseEntity<PatientDto> getPatientById(Long id) {
+        return ResponseEntity.of(Optional.ofNullable(patientService.getPatientById(id)));
     }
 
     @Override
-    public ResponseEntity<PatientDto> updatePatient(Integer id, PatientDto patientDto) {
+    public ResponseEntity<PatientDto> updatePatient(Long id, UpdatePatientRequest patientDto) {
         try {
-            PatientDto existingPatient = patientService.getPatientById(Long.valueOf(id));
-            if (existingPatient != null) {
-                patientDto.setPatientId(id);
-                PatientDto updatedPatient = patientService.savePatient(patientDto);
-                return ResponseEntity.ok(updatedPatient);
-            }
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(patientService.updatePatient(id, patientDto));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
