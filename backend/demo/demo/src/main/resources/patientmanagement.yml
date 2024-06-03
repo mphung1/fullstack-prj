@@ -3,7 +3,7 @@ info:
   title: "Patient Management API"
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8081
     description: Development server
 paths:
   /patients:
@@ -117,7 +117,7 @@ components:
     PatientInfoCriteria:
       type: object
       properties:
-        patientId:
+        id:
           type: integer
           format: int64
         name:
@@ -171,12 +171,12 @@ components:
     PatientDto:
       type: object
       required:
-        - patientId
+        - id
         - name
         - gender
         - age
       properties:
-        patientId:
+        id:
           type: integer
           format: int64
         name:

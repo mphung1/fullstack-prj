@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 @Setter
 @AllArgsConstructor
 public class DemoPatientDto {
-    private Long patientId;
+    private Long id;
 
     @NotBlank(message = "Name is mandatory")
     private String name;

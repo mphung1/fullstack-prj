@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
   const [pageSize, setPageSize] = useState("5");
   const pageSizeArray = [5, 10, 15, 20];
 
-  const [filterPatientId, setFilterPatientId] = useState<string>("");
+  const [filterId, setFilterId] = useState<string>("");
   const [filterName, setFilterName] = useState<string>("");
   const [filterGender, setFilterGender] = useState<string>("");
   const [filterAge, setFilterAge] = useState<string>("");
@@ -76,7 +76,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     loadPatients(currentPage, Number(pageSize), {
-      patientId: filterPatientId,
+      id: filterId,
       name: filterName,
       gender: filterGender,
       age: filterAge,
@@ -107,7 +107,7 @@ const Dashboard: React.FC = () => {
     try {
       await ApiClient.deletePatient(Number(selectedId));
       loadPatients(currentPage, Number(pageSize), {
-        patientId: filterPatientId,
+        id: filterId,
         name: filterName,
         gender: filterGender,
         age: filterAge,
@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
   const applyFilters = () => {
     setCurrentPage(1);
     loadPatients(1, Number(pageSize), {
-      patientId: filterPatientId,
+      id: filterId,
       name: filterName,
       gender: filterGender,
       age: filterAge,
@@ -175,8 +175,8 @@ const Dashboard: React.FC = () => {
         <Grid item xs={12} sm={2}>
           <TextField
             label="Patient ID"
-            value={filterPatientId}
-            onChange={(e) => handleFilterChange(e, setFilterPatientId)}
+            value={filterId}
+            onChange={(e) => handleFilterChange(e, setFilterId)}
             fullWidth
           />
         </Grid>
@@ -251,8 +251,8 @@ const Dashboard: React.FC = () => {
           </TableHead>
           <TableBody>
             {patients.map((patient) => (
-              <TableRow key={patient.patientId}>
-                <TableCell>{patient.patientId}</TableCell>
+              <TableRow key={patient.id}>
+                <TableCell>{patient.id}</TableCell>
                 <TableCell>{patient.name}</TableCell>
                 <TableCell>{patient.gender}</TableCell>
                 <TableCell>{patient.age}</TableCell>
@@ -262,8 +262,8 @@ const Dashboard: React.FC = () => {
                   <Button onClick={() => handleEdit(patient)}>Edit</Button>
                   <Button
                     onClick={() => {
-                      if (patient.patientId) {
-                        handleDelete(patient.patientId);
+                      if (patient.id) {
+                        handleDelete(patient.id);
                       }
                     }}
                   >

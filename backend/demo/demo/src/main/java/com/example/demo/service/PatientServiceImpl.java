@@ -9,6 +9,8 @@ import com.example.demo.exception.EmailExistsException;
 import com.example.demo.exception.PhoneNumExistsException;
 import com.example.demo.exception.PhoneNumFormatException;
 import com.example.demo.mapper.PatientMapper;
+import com.example.demo.mapper.CreatePatientRequestMapper;
+import com.example.demo.mapper.UpdatePatientRequestMapper;
 import com.example.demo.model.Patient;
 import com.example.demo.repository.PatientRepository;
 import com.example.demo.specification.PatientSpecification;
@@ -30,11 +32,14 @@ import java.util.Objects;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
+    private final CreatePatientRequestMapper createPatientRequestMapper;
+    private final UpdatePatientRequestMapper updatePatientRequestMapper;
+
 
     @Override
     public Page<PatientDto> getAllPatients(Pageable pageable, PatientInfoCriteria criteria) {
 
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("patientId").ascending());
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").ascending());
         Page<Patient> patientPage = patientRepository.findAll(PatientSpecification.byCriteria(criteria), sortedPageable);
         return PatientMapper.toDtoPage(patientPage);
     }
@@ -42,9 +47,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDto createPatient(@Valid CreatePatientRequest patientDto) {
         validatePatientInfo(patientDto.getEmail(), patientDto.getPhoneNumber(), null);
-        Patient patient = PatientMapper.toEntity(patientDto);
-        patient.setCreatedAt(LocalDateTime.now());
-        patient.setUpdatedAt(LocalDateTime.now());
+        Patient patient = createPatientRequestMapper.toPatient(patientDto);
         return PatientMapper.toDto(patientRepository.save(patient));
     }
 
@@ -57,12 +60,7 @@ public class PatientServiceImpl implements PatientService {
 
         validatePatientInfo(patientDto.getEmail(), patientDto.getPhoneNumber(), id);
 
-        existingPatient.setName(patientDto.getName());
-        existingPatient.setGender(patientDto.getGender());
-        existingPatient.setAge(patientDto.getAge());
-        existingPatient.setEmail(patientDto.getEmail());
-        existingPatient.setPhoneNumber(patientDto.getPhoneNumber());
-
+        updatePatientRequestMapper.partialUpdate(existingPatient, patientDto);
         return PatientMapper.toDto(patientRepository.save(existingPatient));
     }
 
@@ -79,9 +77,9 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.deleteById(id);
     }
 
-    private void validatePatientInfo(String email, String phoneNumber, Long currentPatientId) {
+    private void validatePatientInfo(String email, String phoneNumber, Long currentId) {
         if (email != null && !email.isEmpty()) {
-            checkEmailAvailability(email, currentPatientId);
+            checkEmailAvailability(email, currentId);
         }
 
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
@@ -89,20 +87,20 @@ public class PatientServiceImpl implements PatientService {
                 throw new PhoneNumFormatException("Phone number must contain only numeric characters");
             }
 
-            checkPhoneNumberAvailability(phoneNumber, currentPatientId);
+            checkPhoneNumberAvailability(phoneNumber, currentId);
         }
     }
 
-    private void checkEmailAvailability(String email, Long currentPatientId) {
+    private void checkEmailAvailability(String email, Long currentId) {
         Patient existingPatient = patientRepository.findByEmail(email).orElse(null);
-        if (existingPatient != null && (!(Objects.equals(existingPatient.getPatientId(), currentPatientId)) || currentPatientId == 0)) {
+        if (existingPatient != null && (!(Objects.equals(existingPatient.getId(), currentId)) || currentId == 0)) {
             throw new EmailExistsException("Email already in use");
         }
     }
 
-    private void checkPhoneNumberAvailability(String phoneNumber, Long currentPatientId) {
+    private void checkPhoneNumberAvailability(String phoneNumber, Long currentId) {
         Patient existingPatient = patientRepository.findByPhoneNumber(phoneNumber).orElse(null);
-        if (existingPatient != null && (!(Objects.equals(existingPatient.getPatientId(), currentPatientId)) || currentPatientId == 0 )) {
+        if (existingPatient != null && (!(Objects.equals(existingPatient.getId(), currentId)) || currentId == 0 )) {
             throw new PhoneNumExistsException("Phone number already in use");
         }
     }

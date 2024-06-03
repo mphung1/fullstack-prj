@@ -20,20 +20,17 @@ public interface PatientMapper {
             return null;
         }
         Patient patient = new Patient();
-//        if (dto.getPatientId() != null) {
-//            patient.setPatientId(dto.getPatientId());
-//        }
+
         patient.setName(request.getName());
         patient.setGender(request.getGender());
         patient.setAge(Integer.parseInt(request.getAge()));
         patient.setEmail(request.getEmail());
         patient.setPhoneNumber(String.valueOf(request.getPhoneNumber()));
-//        if (dto.getCreatedAt() != null) {
-//            patient.setCreatedAt(dto.getCreatedAt().toLocalDateTime());
-//        }
-//        if (dto.getUpdatedAt() != null) {
-//            patient.setUpdatedAt(dto.getUpdatedAt().toLocalDateTime());
-//        }
+
+        // These fields will be set by JPA auditing
+        // patient.setCreatedAt(LocalDateTime.now());
+        // patient.setUpdatedAt(LocalDateTime.now());
+
         return patient;
     }
 
@@ -42,7 +39,7 @@ public interface PatientMapper {
             return null;
         }
         return new PatientDto()
-                .patientId(patient.getPatientId())
+                .id(patient.getId())
                 .name(patient.getName())
                 .gender(patient.getGender())
                 .age(String.valueOf(patient.getAge()))

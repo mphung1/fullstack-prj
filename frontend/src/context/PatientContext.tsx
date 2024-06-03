@@ -17,7 +17,7 @@ export const PatientProvider: React.FC<PatientProviderProps> = ({
   children,
 }) => {
   const [patient, setPatient] = useState<Patient>({
-    patientId: "",
+    id: "",
     name: "",
     gender: "",
     age: "",
@@ -31,7 +31,7 @@ export const PatientProvider: React.FC<PatientProviderProps> = ({
 
   const resetPatient = () => {
     setPatient({
-      patientId: "",
+      id: "",
       name: "",
       gender: "",
       age: "",

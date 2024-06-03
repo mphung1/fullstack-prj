@@ -35,7 +35,7 @@ const CreatePatientConfirm: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (!validatePhoneNumber(patient.phoneNumber)) {
+    if (!validatePhoneNumber(patient.phoneNumber!)) {
       setSnackbarMessage("Phone number must contain only numeric characters");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);

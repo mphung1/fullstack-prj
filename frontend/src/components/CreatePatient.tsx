@@ -9,7 +9,6 @@ import {
   Grid,
 } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
-import { ResetTvSharp } from "@mui/icons-material";
 
 const CreatePatient: React.FC = () => {
   const navigate = useNavigate();
@@ -50,7 +49,6 @@ const CreatePatient: React.FC = () => {
       ...prevPatient,
       [name]: value,
     }));
-    // console.log(patient);
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: false,

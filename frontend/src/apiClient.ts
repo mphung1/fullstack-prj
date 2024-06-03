@@ -11,7 +11,7 @@ const ApiClient = {
       params: {
         page: page - 1,
         size: size,
-        patientId: filters.patientId,
+        id: filters.id,
         name: filters.name,
         gender: filters.gender,
         age: filters.age,

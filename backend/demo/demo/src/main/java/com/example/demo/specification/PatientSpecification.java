@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class PatientSpecification {
 
     public Specification<Patient> byCriteria(PatientInfoCriteria criteria) {
-        return  Specification.where(PatientSpecification.hasPatientId(criteria.getPatientId()))
+        return  Specification.where(PatientSpecification.hasId(criteria.getId()))
                 .and(PatientSpecification.hasName(criteria.getName()))
                 .and(PatientSpecification.hasGender(criteria.getGender()))
                 .and(PatientSpecification.hasAge(criteria.getAge()))
@@ -17,9 +17,9 @@ public class PatientSpecification {
                 .and(PatientSpecification.hasPhoneNumber(String.valueOf(criteria.getPhoneNumber())));
     }
 
-    private Specification<Patient> hasPatientId(Long patientId) {
+    private Specification<Patient> hasId(Long id) {
         return (root, query, criteriaBuilder) ->
-                (patientId == null) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("patientId"), patientId);
+                (id == null) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("id"), id);
     }
 
     private Specification<Patient> hasName(String name) {

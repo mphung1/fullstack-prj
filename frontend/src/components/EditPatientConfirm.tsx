@@ -35,7 +35,7 @@ const EditPatientConfirm: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (!validatePhoneNumber(patient.phoneNumber)) {
+    if (!validatePhoneNumber(patient.phoneNumber!)) {
       setSnackbarMessage("Phone number must contain only numeric characters");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
@@ -44,7 +44,7 @@ const EditPatientConfirm: React.FC = () => {
 
     try {
       const response = await ApiClient.updatePatient(
-        Number(patient.patientId),
+        Number(patient.id),
         patient
       );
       console.log("Patient updated:", response.data);
