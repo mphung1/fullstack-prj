@@ -124,7 +124,7 @@ paths:
           description: Patient deleted
   /auth:
     post:
-      description: Authenticate user and get JWT
+      description: Authenticate users and get JWT
       operationId: authenticate
       tags:
         - "auth"

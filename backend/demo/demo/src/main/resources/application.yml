@@ -18,7 +18,7 @@ server:
   port: 8081
 
 jwt:
-  secret: mysecretkey
+  secret: U0vS/j+1HkVnT0C3eXG9pQxxeT4yWr1tT0s9Qx8+P4Y=
   expirationMs: 3600000
 
 logging:

@@ -1,16 +1,10 @@
-package com.example.demo.security;
-
-import lombok.Getter;
-import lombok.Setter;
+package com.example.demo.model;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
 public class JwtResponse implements Serializable {
 
     private static final long serialVersionUID = -8091879091924046844L;
-
     private final String jwttoken;
 
     public JwtResponse(String jwttoken) {
@@ -20,5 +14,4 @@ public class JwtResponse implements Serializable {
     public String getToken() {
         return this.jwttoken;
     }
-
 }

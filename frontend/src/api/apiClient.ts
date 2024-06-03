@@ -42,7 +42,7 @@ const ApiClient = {
   },
 
   login: (credentials: { username: string; password: string }) => {
-    return api.post("/auth/login", credentials);
+    return api.post("/auth", credentials);
   },
 };
 
