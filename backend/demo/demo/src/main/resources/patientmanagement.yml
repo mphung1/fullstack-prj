@@ -8,8 +8,6 @@ servers:
 paths:
   /patients:
     get:
-      security:
-        - bearerAuth: []
       description: Get all patients with optional filters
       operationId: getAllPatients
       tags:
@@ -33,8 +31,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/PagePatientDto"
     post:
-      security:
-        - bearerAuth: []
       description: Create a new patient
       operationId: createPatient
       tags:
@@ -54,8 +50,6 @@ paths:
                 $ref: "#/components/schemas/PatientDto"
   /patients/{id}:
     get:
-      security:
-        - bearerAuth: []
       description: Get a patient by ID
       operationId: getPatientById
       tags:
@@ -77,8 +71,6 @@ paths:
         404:
           description: Patient not found
     put:
-      security:
-        - bearerAuth: []
       description: Update a patient by ID
       operationId: updatePatient
       tags:
@@ -106,8 +98,6 @@ paths:
         404:
           description: Patient not found
     delete:
-      security:
-        - bearerAuth: []
       description: Delete a patient by ID
       operationId: deletePatient
       tags:
@@ -122,25 +112,6 @@ paths:
       responses:
         204:
           description: Patient deleted
-  /auth:
-    post:
-      description: Authenticate users and get JWT
-      operationId: authenticate
-      tags:
-        - "auth"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/JwtRequest"
-      responses:
-        200:
-          description: JWT token
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/JwtResponse"
 components:
   schemas:
     PatientInfoCriteria:
@@ -247,22 +218,3 @@ components:
           type: integer
         size:
           type: integer
-    JwtRequest:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-    JwtResponse:
-      type: object
-      properties:
-        jwttoken:
-          type: string
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-security:
-  - bearerAuth: []

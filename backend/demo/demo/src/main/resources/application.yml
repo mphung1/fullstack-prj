@@ -17,20 +17,13 @@ spring:
 server:
   port: 8081
 
-jwt:
-  secret: U0vS/j+1HkVnT0C3eXG9pQxxeT4yWr1tT0s9Qx8+P4Y=
-  expirationMs: 3600000
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET}
 
 logging:
   level:
     root: INFO
     org.springframework.security: DEBUG
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-  endpoint:
-    health:
-      show-details: always
