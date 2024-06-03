@@ -26,11 +26,7 @@ public interface PatientMapper {
         patient.setAge(Integer.parseInt(request.getAge()));
         patient.setEmail(request.getEmail());
         patient.setPhoneNumber(String.valueOf(request.getPhoneNumber()));
-
-        // These fields will be set by JPA auditing
-        // patient.setCreatedAt(LocalDateTime.now());
-        // patient.setUpdatedAt(LocalDateTime.now());
-
+        
         return patient;
     }
 
