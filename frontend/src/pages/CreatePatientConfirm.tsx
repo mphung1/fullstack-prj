@@ -10,7 +10,7 @@ import {
   Alert,
 } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
-import ApiClient from "../apiClient";
+import ApiClient from "../api/apiClient";
 import axios from "axios";
 
 const CreatePatientConfirm: React.FC = () => {

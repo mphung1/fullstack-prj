@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Patient } from "./utils/types";
+import { Patient } from "../utils/types";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,

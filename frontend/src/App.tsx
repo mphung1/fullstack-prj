@@ -1,11 +1,12 @@
-import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import CreatePatient from "./components/CreatePatient";
-import CreatePatientConfirm from "./components/CreatePatientConfirm";
-import EditPatient from "./components/EditPatient";
-import EditPatientConfirm from "./components/EditPatientConfirm";
-import Header from "./components/Header";
+import {
+  Dashboard,
+  CreatePatient,
+  CreatePatientConfirm,
+  EditPatient,
+  EditPatientConfirm,
+} from "./pages";
+import { Header } from "./components";
 
 function App() {
   return (
