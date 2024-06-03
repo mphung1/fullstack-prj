@@ -7,6 +7,8 @@ services:
       context: ./backend/demo/demo
     ports:
       - "8080:8080"
+    depends_on:
+      - database
     networks:
       - app-network
     environment:
@@ -27,6 +29,8 @@ services:
       - app-network
     environment:
       - REACT_APP_API_URL=http://backend:8080
+    depends_on:
+      - backend
 
   database:
     image: postgres:latest

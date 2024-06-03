@@ -22,8 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
+import jakarta.validation.Valid;
 import java.util.Objects;
 
 @Slf4j
@@ -35,10 +34,8 @@ public class PatientServiceImpl implements PatientService {
     private final CreatePatientRequestMapper createPatientRequestMapper;
     private final UpdatePatientRequestMapper updatePatientRequestMapper;
 
-
     @Override
     public Page<PatientDto> getAllPatients(Pageable pageable, PatientInfoCriteria criteria) {
-
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").ascending());
         Page<Patient> patientPage = patientRepository.findAll(PatientSpecification.byCriteria(criteria), sortedPageable);
         return PatientMapper.toDtoPage(patientPage);
@@ -59,7 +56,6 @@ public class PatientServiceImpl implements PatientService {
         }
 
         validatePatientInfo(patientDto.getEmail(), patientDto.getPhoneNumber(), id);
-
         updatePatientRequestMapper.partialUpdate(existingPatient, patientDto);
         return PatientMapper.toDto(patientRepository.save(existingPatient));
     }
@@ -86,7 +82,6 @@ public class PatientServiceImpl implements PatientService {
             if (!phoneNumber.matches("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")) {
                 throw new PhoneNumFormatException("Phone number must contain only numeric characters");
             }
-
             checkPhoneNumberAvailability(phoneNumber, currentId);
         }
     }
@@ -100,7 +95,7 @@ public class PatientServiceImpl implements PatientService {
 
     private void checkPhoneNumberAvailability(String phoneNumber, Long currentId) {
         Patient existingPatient = patientRepository.findByPhoneNumber(phoneNumber).orElse(null);
-        if (existingPatient != null && (!(Objects.equals(existingPatient.getId(), currentId)) || currentId == 0 )) {
+        if (existingPatient != null && (!(Objects.equals(existingPatient.getId(), currentId)) || currentId == 0)) {
             throw new PhoneNumExistsException("Phone number already in use");
         }
     }

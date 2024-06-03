@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-//import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class PatientsApiImpl implements PatientsApiDelegate {
 
     private final PatientServiceImpl patientService;
-
 
     @Override
     public ResponseEntity<PatientDto> createPatient(CreatePatientRequest patientDto) {
@@ -36,10 +34,13 @@ public class PatientsApiImpl implements PatientsApiDelegate {
 
     @Override
     public ResponseEntity<PagePatientDto> getAllPatients(PatientInfoCriteria criteria, Pageable pageable) {
-
         Page<PatientDto> patientsPage = patientService.getAllPatients(PageRequest.of(pageable.getPage(), pageable.getSize()), criteria);
-
-        PagePatientDto pagePatientDto = new PagePatientDto().content(patientsPage.getContent()).totalElements((int) patientsPage.getTotalElements()).totalPages(patientsPage.getTotalPages()).number(patientsPage.getNumber()).size(patientsPage.getSize());
+        PagePatientDto pagePatientDto = new PagePatientDto()
+                .content(patientsPage.getContent())
+                .totalElements((int) patientsPage.getTotalElements())
+                .totalPages(patientsPage.getTotalPages())
+                .number(patientsPage.getNumber())
+                .size(patientsPage.getSize());
 
         return ResponseEntity.ok(pagePatientDto);
     }

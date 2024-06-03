@@ -10,9 +10,27 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+#  flyway:
+#    enabled: true
+#    locations: classpath:db/migration
 
 server:
   port: 8081
-# flyway:
-#   enabled: true
-#   locations: classpath:db/migration
+
+jwt:
+  secret: mysecretkey
+  expirationMs: 3600000
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always

@@ -26,7 +26,7 @@ public interface PatientMapper {
         patient.setAge(Integer.parseInt(request.getAge()));
         patient.setEmail(request.getEmail());
         patient.setPhoneNumber(String.valueOf(request.getPhoneNumber()));
-        
+
         return patient;
     }
 

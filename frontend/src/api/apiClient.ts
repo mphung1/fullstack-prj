@@ -5,6 +5,14 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 const ApiClient = {
   getPatients: (page: number, size: number, filters: Patient) => {
     return api.get("/patients", {
@@ -31,6 +39,10 @@ const ApiClient = {
 
   deletePatient: (id: number) => {
     return api.delete(`/patients/${id}`);
+  },
+
+  login: (credentials: { username: string; password: string }) => {
+    return api.post("/auth/login", credentials);
   },
 };
 

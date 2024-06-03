@@ -49,8 +49,12 @@ const Dashboard: React.FC = () => {
       const response = await ApiClient.getPatients(page, size, filters);
       setPatients(response.data.content);
       setTotalPages(response.data.totalPages);
-    } catch (error) {
-      console.error("Error fetching patients", error);
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        navigate("/login");
+      } else {
+        console.error("Error fetching patients", error);
+      }
     }
   };
 
