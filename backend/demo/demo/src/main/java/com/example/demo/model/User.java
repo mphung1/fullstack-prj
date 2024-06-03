@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Table()
-@Entity(name = "users")
+@Table(name = "users")
+@Entity(name = "User")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,15 +21,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String login;
+    @Column(nullable = false, unique = true)
+    private String username;
 
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole role;
 
-    public User(String login, String password, UserRole role) {
-        this.login = login;
+    public User(String username, String password, UserRole role) {
+        this.username = username;
         this.password = password;
         this.role = role;
     }
@@ -44,7 +47,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return username;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class User implements UserDetails {
         ADMIN("admin"),
         USER("user");
 
-        private String role;
+        private final String role;
 
         UserRole(String role) {
             this.role = role;

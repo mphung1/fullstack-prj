@@ -130,7 +130,7 @@ components:
           type: string
         phoneNumber:
           type: string
-          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$" # Adjusted pattern to allow empty strings
     CreatePatientRequest:
       type: object
       required:
@@ -148,7 +148,7 @@ components:
           type: string
         phoneNumber:
           type: string
-          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$" # Adjusted pattern to allow empty strings
     UpdatePatientRequest:
       type: object
       required:
@@ -167,7 +167,7 @@ components:
           type: string
         phoneNumber:
           type: string
-          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$" # Adjusted pattern to allow empty strings
     PatientDto:
       type: object
       required:
@@ -189,7 +189,7 @@ components:
           type: string
         phoneNumber:
           type: string
-          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"
+          pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$" # Adjusted pattern to allow empty strings
         createdAt:
           type: string
           format: date-time

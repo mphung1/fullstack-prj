@@ -12,12 +12,10 @@ import org.springframework.context.annotation.PropertySource;
 public class DemoApplication {
 
 	public static void main(String[] args) {
-		// Load .env file
 		Dotenv dotenv = Dotenv.configure()
 				.directory(System.getProperty("user.dir"))
 				.load();
 
-		// Set system properties for Spring to pick up
 		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
 		SpringApplication.run(DemoApplication.class, args);

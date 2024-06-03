@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Header: React.FC = () => {
@@ -9,27 +9,27 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/signin");
   };
 
   return (
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Patient Management
+          VINBRAIN
         </Typography>
-        {isAuthenticated ? (
+        {!isAuthenticated ? (
           <>
-            <Button color="inherit" component={Link} to="/">
-              Dashboard
+            <Button color="inherit" component={RouterLink} to="/signup">
+              Sign Up
             </Button>
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
+            <Button color="inherit" component={RouterLink} to="/signin">
+              Sign In
             </Button>
           </>
         ) : (
-          <Button color="inherit" component={Link} to="/login">
-            Login
+          <Button color="inherit" onClick={handleLogout}>
+            Log Out
           </Button>
         )}
       </Toolbar>

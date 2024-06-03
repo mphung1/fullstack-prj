@@ -14,6 +14,14 @@ api.interceptors.request.use((config) => {
 });
 
 const ApiClient = {
+  signUp: (username: string, password: string, role: string) => {
+    return api.post("/api/v1/auth/signup", { username, password, role });
+  },
+
+  signIn: (username: string, password: string) => {
+    return api.post("/api/v1/auth/signin", { username, password });
+  },
+
   getPatients: (page: number, size: number, filters: Patient) => {
     return api.get("/patients", {
       params: {
@@ -39,10 +47,6 @@ const ApiClient = {
 
   deletePatient: (id: number) => {
     return api.delete(`/patients/${id}`);
-  },
-
-  login: (credentials: { username: string; password: string }) => {
-    return api.post("/auth", credentials);
   },
 };
 

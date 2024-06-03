@@ -2,7 +2,7 @@ package com.example.demo.dtos;
 import com.example.demo.model.User;
 
 public record SignUpDto(
-        String login,
+        String username,
         String password,
         User.UserRole role) {
 }
