@@ -7,17 +7,27 @@ import {
   Typography,
   MenuItem,
 } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
 const SignUp: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("USER");
+  const { showMessage } = useAuth();
 
   const handleSignUp = async () => {
     try {
       await ApiClient.signUp(username, password, role);
-      alert("Sign up successful");
+      showMessage("Sign up successful", "success");
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        showMessage(`Sign up error: ${error.response.data}`, "error");
+      } else if (error instanceof Error) {
+        showMessage(`Sign up error: ${error.message}`, "error");
+      } else {
+        showMessage("Sign up error: An unknown error occurred", "error");
+      }
       console.error("Sign up error", error);
     }
   };

@@ -3,13 +3,14 @@ import ApiClient from "../api/apiClient";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Container, TextField, Button, Typography } from "@mui/material";
+import axios from "axios";
 
 const SignIn: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, showMessage } = useAuth();
 
   const handleSignIn = async () => {
     try {
@@ -18,6 +19,13 @@ const SignIn: React.FC = () => {
       const from = location.state?.from?.pathname || "/";
       navigate(from);
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        showMessage(error.response.data, "error");
+      } else if (error instanceof Error) {
+        showMessage(`Sign in error: ${error.message}`, "error");
+      } else {
+        showMessage("Sign in error: An unknown error occurred", "error");
+      }
       console.error("Sign in error", error);
     }
   };

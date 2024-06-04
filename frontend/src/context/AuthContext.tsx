@@ -1,29 +1,84 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
+import { Snackbar, Alert } from "@mui/material";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (token: string) => void;
   logout: () => void;
+  showMessage: (message: string, severity: "success" | "error") => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem("token"));
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    !!localStorage.getItem("token")
+  );
+  const [snackbar, setSnackbar] = useState<{
+    message: string;
+    severity: "success" | "error";
+  } | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsAuthenticated(false);
+        navigate("/signin");
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [navigate]);
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
     setIsAuthenticated(true);
+    showMessage("Login successful", "success");
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
+    navigate("/signin");
+    showMessage("Logged out successfully", "success");
+  };
+
+  const showMessage = (message: string, severity: "success" | "error") => {
+    setSnackbar({ message, severity });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login, logout, showMessage }}
+    >
       {children}
+      {snackbar && (
+        <Snackbar
+          open={true}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      )}
     </AuthContext.Provider>
   );
 };

@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
       setTotalPages(response.data.totalPages);
     } catch (error: any) {
       if (error.response?.status === 401) {
-        navigate("/login");
+        navigate("/signin");
       } else {
         console.error("Error fetching patients", error);
       }
