@@ -2,14 +2,22 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import ApiClient from "../api/apiClient";
 
 const Header: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, showMessage } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/signin");
+  const handleLogout = async () => {
+    try {
+      await ApiClient.logout();
+      logout();
+      showMessage("Logged out successfully", "success");
+      navigate("/signin");
+    } catch (error) {
+      showMessage("Logout error: Unable to logout", "error");
+      console.error("Logout error", error);
+    }
   };
 
   return (

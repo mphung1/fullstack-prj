@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Typography,
-  Button,
-  Grid,
-  Paper,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Container, Typography, Button, Grid, Paper } from "@mui/material";
 import { usePatient } from "../context/PatientContext";
 import ApiClient from "../api/apiClient";
 import axios from "axios";
+import SnackbarAlert from "../components/SnackbarAlert";
 
 const EditPatientConfirm: React.FC = () => {
   const navigate = useNavigate();
@@ -118,19 +111,12 @@ const EditPatientConfirm: React.FC = () => {
           </Button>
         </Grid>
       </Grid>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <SnackbarAlert
+        openSnackbar={openSnackbar}
+        handleSnackbarClose={handleSnackbarClose}
+        snackbarMessage={snackbarMessage}
+        snackbarSeverity={snackbarSeverity}
+      />
     </Container>
   );
 };
