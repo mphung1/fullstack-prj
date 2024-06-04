@@ -1,5 +1,5 @@
 package com.example.demo.dtos;
 
-public record JwtDto(
+public record JwtResponseDto(
         String accessToken) {
 }

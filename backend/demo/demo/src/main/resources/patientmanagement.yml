@@ -112,6 +112,67 @@ paths:
       responses:
         204:
           description: Patient deleted
+  /auth/signup:
+    post:
+      description: Register a new user
+      operationId: signUp
+      tags:
+        - "auth"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+      responses:
+        201:
+          description: User registered successfully
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/signin:
+    post:
+      description: Authenticate a user
+      operationId: signIn
+      tags:
+        - "auth"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInRequest"
+      responses:
+        200:
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JwtResponse"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/logout:
+    post:
+      description: Logout a user
+      operationId: logout
+      tags:
+        - "auth"
+      responses:
+        200:
+          description: User logged out successfully
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     PatientInfoCriteria:
@@ -201,8 +262,10 @@ components:
       properties:
         page:
           type: integer
+          default: 0
         size:
           type: integer
+          default: 5
     PagePatientDto:
       type: object
       properties:
@@ -218,3 +281,39 @@ components:
           type: integer
         size:
           type: integer
+    SignUpRequest:
+      type: object
+      required:
+        - username
+        - password
+        - role
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+    SignInRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    JwtResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string

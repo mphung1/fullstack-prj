@@ -64,7 +64,7 @@ const SignUp: React.FC = () => {
         onChange={(e) => setRole(e.target.value)}
       >
         <MenuItem value="USER">USER</MenuItem>
-        <MenuItem value="ADMIN">ADMIN</MenuItem>
+        {/*<MenuItem value="ADMIN">ADMIN</MenuItem>*/}
       </TextField>
       <Button
         variant="contained"

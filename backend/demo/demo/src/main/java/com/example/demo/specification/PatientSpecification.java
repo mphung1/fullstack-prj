@@ -9,12 +9,16 @@ import org.springframework.data.jpa.domain.Specification;
 public class PatientSpecification {
 
     public Specification<Patient> byCriteria(PatientInfoCriteria criteria) {
-        return  Specification.where(PatientSpecification.hasId(criteria.getId()))
-                .and(PatientSpecification.hasName(criteria.getName()))
-                .and(PatientSpecification.hasGender(criteria.getGender()))
-                .and(PatientSpecification.hasAge(criteria.getAge()))
-                .and(PatientSpecification.hasEmail(criteria.getEmail()))
-                .and(PatientSpecification.hasPhoneNumber(String.valueOf(criteria.getPhoneNumber())));
+        if (criteria == null) {
+            return Specification.where(null);
+        }
+
+        return Specification.where(hasId(criteria.getId()))
+                .and(hasName(criteria.getName()))
+                .and(hasGender(criteria.getGender()))
+                .and(hasAge(criteria.getAge()))
+                .and(hasEmail(criteria.getEmail()))
+                .and(hasPhoneNumber(criteria.getPhoneNumber()));
     }
 
     private Specification<Patient> hasId(Long id) {

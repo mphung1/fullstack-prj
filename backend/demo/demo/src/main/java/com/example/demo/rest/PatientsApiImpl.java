@@ -34,7 +34,10 @@ public class PatientsApiImpl implements PatientsApiDelegate {
 
     @Override
     public ResponseEntity<PagePatientDto> getAllPatients(PatientInfoCriteria criteria, Pageable pageable) {
-        Page<PatientDto> patientsPage = patientService.getAllPatients(PageRequest.of(pageable.getPage(), pageable.getSize()), criteria);
+        // Apply default values if not provided
+        int page = pageable.getPage() >= 0 ? pageable.getPage() : 0;
+        int size = pageable.getSize() > 0 ? pageable.getSize() : 5;
+        Page<PatientDto> patientsPage = patientService.getAllPatients(PageRequest.of(page, size), criteria);
         PagePatientDto pagePatientDto = new PagePatientDto()
                 .content(patientsPage.getContent())
                 .totalElements((int) patientsPage.getTotalElements())

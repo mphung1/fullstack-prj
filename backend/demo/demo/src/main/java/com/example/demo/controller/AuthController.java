@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.config.auth.TokenProvider;
-import com.example.demo.dtos.JwtDto;
-import com.example.demo.dtos.SignInDto;
-import com.example.demo.dtos.SignUpDto;
+import com.example.demo.dtos.JwtResponseDto;
+import com.example.demo.dtos.SignInRequestDto;
+import com.example.demo.dtos.SignUpRequestDto;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.TokenBlacklistService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-// @CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -30,7 +30,7 @@ public class AuthController {
     private TokenBlacklistService tokenBlacklistService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpDto data) {
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto data) {
         try {
             service.signUp(data);
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -40,12 +40,12 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody @Valid SignInDto data) {
+    public ResponseEntity<?> signIn(@RequestBody SignInRequestDto data) {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
             var authUser = authenticationManager.authenticate(usernamePassword);
             var accessToken = tokenService.generateAccessToken((com.example.demo.model.User) authUser.getPrincipal());
-            return ResponseEntity.ok(new JwtDto(accessToken));
+            return ResponseEntity.ok(new JwtResponseDto(accessToken));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         } catch (AuthenticationException e) {

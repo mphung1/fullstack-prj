@@ -1,6 +1,6 @@
 package com.example.demo.dtos;
 
-public record SignInDto(
+public record SignInRequestDto(
         String username,
         String password) {
 }
