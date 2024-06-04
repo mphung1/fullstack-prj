@@ -15,7 +15,7 @@ const SignIn: React.FC = () => {
   const handleSignIn = async () => {
     try {
       const response = await ApiClient.signIn(username, password);
-      login(response.data.accessToken);
+      login(response.data.accessToken, response.data.role);
       const from = location.state?.from?.pathname || "/";
       navigate(from);
     } catch (error) {

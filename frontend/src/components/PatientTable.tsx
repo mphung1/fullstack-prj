@@ -10,6 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { Patient } from "../utils/types";
+import useRole from "../hooks/useRole";
 
 interface PatientTableProps {
   patients: Patient[];
@@ -22,6 +23,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
   handleEdit,
   handleDelete,
 }) => {
+  const { isAdmin } = useRole();
   return (
     <TableContainer component={Paper} style={{ marginTop: "20px" }}>
       <Table>
@@ -33,7 +35,9 @@ const PatientTable: React.FC<PatientTableProps> = ({
             <TableCell sx={{ fontWeight: "bold" }}>AGE</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>EMAIL</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>PHONE NUMBER</TableCell>
-            <TableCell sx={{ fontWeight: "bold" }}>ACTIONS</TableCell>
+            {isAdmin && (
+              <TableCell sx={{ fontWeight: "bold" }}>ACTIONS</TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -45,18 +49,20 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <TableCell>{patient.age}</TableCell>
               <TableCell>{patient.email}</TableCell>
               <TableCell>{patient.phoneNumber}</TableCell>
-              <TableCell>
-                <Button onClick={() => handleEdit(patient)}>Edit</Button>
-                <Button
-                  onClick={() => {
-                    if (patient.id) {
-                      handleDelete(patient.id);
-                    }
-                  }}
-                >
-                  Delete
-                </Button>
-              </TableCell>
+              {isAdmin && (
+                <TableCell>
+                  <Button onClick={() => handleEdit(patient)}>Edit</Button>
+                  <Button
+                    onClick={() => {
+                      if (patient.id) {
+                        handleDelete(patient.id);
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

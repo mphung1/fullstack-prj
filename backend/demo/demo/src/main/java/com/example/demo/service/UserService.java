@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
@@ -33,8 +33,9 @@ public class AuthService implements UserDetailsService {
         if (repository.findByUsername(data.username()) != null) {
             throw new InvalidJwtException("Username already exists");
         }
+        User.UserRole role = User.UserRole.valueOf(data.role().toUpperCase());
         String encryptedPassword = passwordEncoder.encode(data.password());
-        User newUser = new User(data.username(), encryptedPassword, User.UserRole.valueOf(data.role()));
+        User newUser = new User(data.username(), encryptedPassword, role);
         return repository.save(newUser);
     }
 }

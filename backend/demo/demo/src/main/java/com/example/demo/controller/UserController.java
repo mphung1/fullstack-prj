@@ -1,10 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.config.auth.TokenProvider;
+import com.example.demo.model.User;
 import com.example.demo.dtos.JwtResponseDto;
 import com.example.demo.dtos.SignInRequestDto;
 import com.example.demo.dtos.SignUpRequestDto;
-import com.example.demo.service.AuthService;
+import com.example.demo.service.UserService;
 import com.example.demo.service.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-//@CrossOrigin(origins = "http://localhost:3000")
-public class AuthController {
+public class UserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private AuthService service;
+    private UserService service;
     @Autowired
     private TokenProvider tokenService;
     @Autowired
@@ -45,7 +45,8 @@ public class AuthController {
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
             var authUser = authenticationManager.authenticate(usernamePassword);
             var accessToken = tokenService.generateAccessToken((com.example.demo.model.User) authUser.getPrincipal());
-            return ResponseEntity.ok(new JwtResponseDto(accessToken));
+            var userRole = ((User) authUser.getPrincipal()).getRole().name();
+            return ResponseEntity.ok(new JwtResponseDto(accessToken, userRole));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         } catch (AuthenticationException e) {

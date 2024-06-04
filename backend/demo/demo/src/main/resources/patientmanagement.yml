@@ -317,3 +317,349 @@ components:
       properties:
         message:
           type: string
+
+
+
+
+# openapi: "3.0.3"
+# info:
+#   title: "Patient Management API"
+#   version: 1.0.0
+# servers:
+#   - url: http://localhost:8081
+#     description: Development server
+# paths:
+#   /patients:
+#     get:
+#       description: Get all patients with optional filters
+#       operationId: getAllPatients
+#       tags:
+#         - "patients"
+#       parameters:
+#         - name: criteria
+#           in: query
+#           required: false
+#           schema:
+#             $ref: "#/components/schemas/PatientInfoCriteria"
+#         - name: pageable
+#           in: query
+#           required: false
+#           schema:
+#             $ref: "#/components/schemas/Pageable"
+#       responses:
+#         200:
+#           description: Successful operation
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/PagePatientDto"
+#     #      security:
+#     #        - bearerAuth: [ ROLE_USER, ROLE_ADMIN ]
+
+#     post:
+#       description: Create a new patient
+#       operationId: createPatient
+#       tags:
+#         - "patients"
+#       requestBody:
+#         required: true
+#         content:
+#           application/json:
+#             schema:
+#               $ref: "#/components/schemas/CreatePatientRequest"
+#       responses:
+#         201:
+#           description: Created patient
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/PatientDto"
+#   #      security:
+#   #        - bearerAuth: [ ROLE_ADMIN ]
+
+#   /patients/{id}:
+#     get:
+#       description: Get a patient by ID
+#       operationId: getPatientById
+#       tags:
+#         - "patients"
+#       parameters:
+#         - name: id
+#           in: path
+#           required: true
+#           schema:
+#             type: integer
+#             format: int64
+#       responses:
+#         200:
+#           description: Patient details
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/PatientDto"
+#         404:
+#           description: Patient not found
+#     #      security:
+#     #        - bearerAuth: [ ROLE_USER, ROLE_ADMIN ]
+
+#     put:
+#       description: Update a patient by ID
+#       operationId: updatePatient
+#       tags:
+#         - "patients"
+#       parameters:
+#         - name: id
+#           in: path
+#           required: true
+#           schema:
+#             type: integer
+#             format: int64
+#       requestBody:
+#         required: true
+#         content:
+#           application/json:
+#             schema:
+#               $ref: "#/components/schemas/UpdatePatientRequest"
+#       responses:
+#         200:
+#           description: Updated patient
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/PatientDto"
+#         404:
+#           description: Patient not found
+#     #      security:
+#     #        - bearerAuth: [ ROLE_ADMIN ]
+
+#     delete:
+#       description: Delete a patient by ID
+#       operationId: deletePatient
+#       tags:
+#         - "patients"
+#       parameters:
+#         - name: id
+#           in: path
+#           required: true
+#           schema:
+#             type: integer
+#             format: int64
+#       responses:
+#         204:
+#           description: Patient deleted
+#   #      security:
+#   #        - bearerAuth: [ ROLE_ADMIN ]
+
+#   /auth/signup:
+#     post:
+#       description: Register a new user
+#       operationId: signUp
+#       tags:
+#         - "auth"
+#       requestBody:
+#         required: true
+#         content:
+#           application/json:
+#             schema:
+#               $ref: "#/components/schemas/SignUpRequest"
+#       responses:
+#         201:
+#           description: User registered successfully
+#         400:
+#           description: Bad request
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/ErrorResponse"
+#   /auth/signin:
+#     post:
+#       description: Authenticate a user
+#       operationId: signIn
+#       tags:
+#         - "auth"
+#       requestBody:
+#         required: true
+#         content:
+#           application/json:
+#             schema:
+#               $ref: "#/components/schemas/SignInRequest"
+#       responses:
+#         200:
+#           description: User authenticated successfully
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/JwtResponse"
+#         401:
+#           description: Unauthorized
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/ErrorResponse"
+#   /auth/logout:
+#     post:
+#       description: Logout a user
+#       operationId: logout
+#       tags:
+#         - "auth"
+#       responses:
+#         200:
+#           description: User logged out successfully
+#         400:
+#           description: Bad request
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/ErrorResponse"
+# components:
+#   schemas:
+#     PatientInfoCriteria:
+#       type: object
+#       properties:
+#         id:
+#           type: integer
+#           format: int64
+#         name:
+#           type: string
+#         gender:
+#           type: string
+#         age:
+#           type: string
+#         email:
+#           type: string
+#         phoneNumber:
+#           type: string
+#           pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$"
+#     CreatePatientRequest:
+#       type: object
+#       required:
+#         - name
+#         - gender
+#         - age
+#       properties:
+#         name:
+#           type: string
+#         gender:
+#           type: string
+#         age:
+#           type: string
+#         email:
+#           type: string
+#         phoneNumber:
+#           type: string
+#           pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$"
+#     UpdatePatientRequest:
+#       type: object
+#       required:
+#         - name
+#         - gender
+#         - age
+#       properties:
+#         name:
+#           type: string
+#         gender:
+#           type: string
+#         age:
+#           type: string
+#           format: int
+#         email:
+#           type: string
+#         phoneNumber:
+#           type: string
+#           pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$"
+#     PatientDto:
+#       type: object
+#       required:
+#         - id
+#         - name
+#         - gender
+#         - age
+#       properties:
+#         id:
+#           type: integer
+#           format: int64
+#         name:
+#           type: string
+#         gender:
+#           type: string
+#         age:
+#           type: string
+#         email:
+#           type: string
+#         phoneNumber:
+#           type: string
+#           pattern: "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$|^$"
+#         createdAt:
+#           type: string
+#           format: date-time
+#         updatedAt:
+#           type: string
+#           format: date-time
+#     Pageable:
+#       type: object
+#       properties:
+#         page:
+#           type: integer
+#           default: 0
+#         size:
+#           type: integer
+#           default: 5
+#     PagePatientDto:
+#       type: object
+#       properties:
+#         content:
+#           type: array
+#           items:
+#             $ref: "#/components/schemas/PatientDto"
+#         totalPages:
+#           type: integer
+#         totalElements:
+#           type: integer
+#         number:
+#           type: integer
+#         size:
+#           type: integer
+#     SignUpRequest:
+#       type: object
+#       required:
+#         - username
+#         - password
+#         - role
+#       properties:
+#         username:
+#           type: string
+#         password:
+#           type: string
+#         role:
+#           type: string
+#           enum:
+#             - USER
+#             - ADMIN
+#     SignInRequest:
+#       type: object
+#       required:
+#         - username
+#         - password
+#       properties:
+#         username:
+#           type: string
+#         password:
+#           type: string
+#     JwtResponse:
+#       type: object
+#       properties:
+#         accessToken:
+#           type: string
+#     ErrorResponse:
+#       type: object
+#       properties:
+#         message:
+#           type: string
+# #  securitySchemes:
+# #    bearerAuth:
+# #      type: http
+# #      scheme: bearer
+# #      bearerFormat: JWT
+# #security:
+# #  - bearerAuth: []
+

@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (token: string) => void;
+  login: (token: string, role: string) => void;
   logout: () => void;
   showMessage: (message: string, severity: "success" | "error") => void;
 }
@@ -39,8 +39,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     };
   }, [navigate]);
 
-  const login = (token: string) => {
+  const login = (token: string, role: string) => {
     Cookies.set("token", token, {
+      expires: 7,
+      secure: true,
+      sameSite: "strict",
+    });
+    Cookies.set("role", role, {
       expires: 7,
       secure: true,
       sameSite: "strict",
@@ -51,6 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = () => {
     Cookies.remove("token");
+    Cookies.remove("role");
     setIsAuthenticated(false);
     navigate("/signin");
     showMessage("Logged out successfully", "success");

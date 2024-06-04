@@ -12,10 +12,12 @@ import {
   DeleteDialog,
   SnackbarAlert,
 } from "../components";
+import useRole from "../hooks/useRole";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { setEditingPatient } = usePatient();
+  const { isAdmin } = useRole();
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -170,15 +172,17 @@ const Dashboard: React.FC = () => {
         justifyContent="space-between"
         style={{ marginTop: "20px" }}
       >
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreatePatient}
-          >
-            Create Patient
-          </Button>
-        </Grid>
+        {isAdmin && (
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreatePatient}
+            >
+              Create Patient
+            </Button>
+          </Grid>
+        )}
         <Grid item>
           <PaginationControl
             pageSize={pageSize}
