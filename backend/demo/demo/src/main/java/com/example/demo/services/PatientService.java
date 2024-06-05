@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.services;
 
 import com.baeldung.openapi.model.CreatePatientRequest;
 import com.baeldung.openapi.model.PatientDto;

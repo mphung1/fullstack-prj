@@ -40,7 +40,7 @@ const EditPatientConfirm: React.FC = () => {
         Number(patient.id),
         patient
       );
-      console.log("Patient updated:", response.data);
+      // console.log("Patient updated:", response.data);
       setIsSaved(true);
       setSnackbarMessage("Patient updated successfully!");
       setSnackbarSeverity("success");

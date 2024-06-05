@@ -37,7 +37,7 @@ const CreatePatientConfirm: React.FC = () => {
 
     try {
       const response = await ApiClient.createPatient(patient);
-      console.log("Patient created:", response.data);
+      // console.log("Patient created:", response.data);
       setIsSaved(true);
       setSnackbarMessage("Patient created successfully!");
       setSnackbarSeverity("success");

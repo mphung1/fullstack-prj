@@ -4,27 +4,25 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.demo.model.User;
-import com.example.demo.service.TokenBlacklistService;
+import com.example.demo.models.entities.User;
+import com.example.demo.services.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import static com.example.demo.config.SecurityConstants.*;
+
 @Service
 public class TokenProvider {
-    @Value("${security.jwt.token.secret-key}")
-    private String JWT_SECRET;
-
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
 
     public String generateAccessToken(User user) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
+            Algorithm algorithm = Algorithm.HMAC256(JWT_KEY);
             return JWT.create()
                     .withSubject(user.getUsername())
                     .withClaim("username", user.getUsername())
@@ -40,7 +38,7 @@ public class TokenProvider {
             if (tokenBlacklistService.isTokenBlacklisted(token)) {
                 throw new JWTVerificationException("Token is blacklisted");
             }
-            Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
+            Algorithm algorithm = Algorithm.HMAC256(JWT_KEY);
             return JWT.require(algorithm)
                     .build()
                     .verify(token)

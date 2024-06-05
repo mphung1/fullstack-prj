@@ -9,17 +9,21 @@ import {
 } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUp: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("USER");
   const { showMessage } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (event?: React.FormEvent) => {
+    if (event) event.preventDefault();
     try {
       await ApiClient.signUp(username, password, role);
       showMessage("Sign up successful", "success");
+      navigate("signin");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         showMessage(`Sign up error: ${error.response.data}`, "error");
@@ -37,43 +41,40 @@ const SignUp: React.FC = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Sign Up
       </Typography>
-      <TextField
-        label="Username"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <TextField
-        label="Password"
-        type="password"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <TextField
-        select
-        label="Role"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      >
-        <MenuItem value="USER">USER</MenuItem>
-        {/*<MenuItem value="ADMIN">ADMIN</MenuItem>*/}
-      </TextField>
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleSignUp}
-      >
-        Sign Up
-      </Button>
+      <form onSubmit={handleSignUp}>
+        <TextField
+          label="Username"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <TextField
+          select
+          label="Role"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <MenuItem value="USER">USER</MenuItem>
+          {/*<MenuItem value="ADMIN">ADMIN</MenuItem>*/}
+        </TextField>
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Sign Up
+        </Button>
+      </form>
     </Container>
   );
 };

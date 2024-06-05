@@ -1,12 +1,12 @@
-package com.example.demo.controller;
+package com.example.demo.controllers;
 
 import com.example.demo.config.auth.TokenProvider;
-import com.example.demo.model.User;
-import com.example.demo.dtos.JwtResponseDto;
-import com.example.demo.dtos.SignInRequestDto;
-import com.example.demo.dtos.SignUpRequestDto;
-import com.example.demo.service.UserService;
-import com.example.demo.service.TokenBlacklistService;
+import com.example.demo.models.entities.User;
+import com.example.demo.models.dtos.JwtResponseDto;
+import com.example.demo.models.dtos.SignInRequestDto;
+import com.example.demo.models.dtos.SignUpRequestDto;
+import com.example.demo.services.UserService;
+import com.example.demo.services.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +44,7 @@ public class UserController {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
             var authUser = authenticationManager.authenticate(usernamePassword);
-            var accessToken = tokenService.generateAccessToken((com.example.demo.model.User) authUser.getPrincipal());
+            var accessToken = tokenService.generateAccessToken((com.example.demo.models.entities.User) authUser.getPrincipal());
             var userRole = ((User) authUser.getPrincipal()).getRole().name();
             return ResponseEntity.ok(new JwtResponseDto(accessToken, userRole));
         } catch (BadCredentialsException e) {

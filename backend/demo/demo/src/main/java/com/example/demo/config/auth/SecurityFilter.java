@@ -1,6 +1,6 @@
 package com.example.demo.config.auth;
 
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-//        try {
             var token = this.recoverToken(request);
             if (token != null) {
                 var login = tokenService.validateToken(token);
@@ -31,9 +30,6 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-//        } catch (Exception e) {
-//            throw new AccessDeniedException("Invalid token or authorized access");
-//        }
         filterChain.doFilter(request, response);
 
     }

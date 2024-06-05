@@ -13,15 +13,8 @@ spring:
 #  flyway:
 #    enabled: true
 #    locations: classpath:db/migration
-
 server:
   port: 8081
-
-security:
-  jwt:
-    token:
-      secret-key: ${JWT_SECRET}
-
 logging:
   level:
     root: INFO

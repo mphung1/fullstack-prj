@@ -12,7 +12,8 @@ const SignIn: React.FC = () => {
   const location = useLocation();
   const { login, showMessage } = useAuth();
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (event?: React.FormEvent) => {
+    if (event) event.preventDefault();
     try {
       const response = await ApiClient.signIn(username, password);
       login(response.data.accessToken, response.data.role);
@@ -36,31 +37,28 @@ const SignIn: React.FC = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Sign In
       </Typography>
-      <TextField
-        label="Username"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <TextField
-        label="Password"
-        type="password"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleSignIn}
-      >
-        Sign In
-      </Button>
+      <form onSubmit={handleSignIn}>
+        <TextField
+          label="Username"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Sign In
+        </Button>
+      </form>
     </Container>
   );
 };

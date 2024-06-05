@@ -2,7 +2,7 @@ package com.example.demo.rest;
 
 import com.baeldung.openapi.api.PatientsApiDelegate;
 import com.baeldung.openapi.model.*;
-import com.example.demo.service.PatientServiceImpl;
+import com.example.demo.services.PatientServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

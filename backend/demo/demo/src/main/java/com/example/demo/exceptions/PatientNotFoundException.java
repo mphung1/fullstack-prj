@@ -1,4 +1,4 @@
-package com.example.demo.exception;
+package com.example.demo.exceptions;
 
 public class PatientNotFoundException extends RuntimeException {
     public PatientNotFoundException(String message) {

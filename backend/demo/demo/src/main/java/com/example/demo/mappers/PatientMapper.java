@@ -1,8 +1,8 @@
-package com.example.demo.mapper;
+package com.example.demo.mappers;
 
 import com.baeldung.openapi.model.CreatePatientRequest;
 import com.baeldung.openapi.model.PatientDto;
-import com.example.demo.model.Patient;
+import com.example.demo.models.entities.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 

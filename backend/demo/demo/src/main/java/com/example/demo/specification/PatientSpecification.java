@@ -1,7 +1,7 @@
 package com.example.demo.specification;
 
 import com.baeldung.openapi.model.PatientInfoCriteria;
-import com.example.demo.model.Patient;
+import com.example.demo.models.entities.Patient;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 

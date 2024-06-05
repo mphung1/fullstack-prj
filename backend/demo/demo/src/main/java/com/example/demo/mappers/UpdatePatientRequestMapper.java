@@ -1,5 +1,5 @@
-package com.example.demo.mapper;
-import com.example.demo.model.Patient;
+package com.example.demo.mappers;
+import com.example.demo.models.entities.Patient;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
