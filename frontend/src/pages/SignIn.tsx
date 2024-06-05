@@ -18,6 +18,7 @@ const SignIn: React.FC = () => {
       login(response.data.accessToken, response.data.role);
       const from = location.state?.from?.pathname || "/";
       navigate(from);
+      // window.location.reload();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         showMessage(error.response.data, "error");

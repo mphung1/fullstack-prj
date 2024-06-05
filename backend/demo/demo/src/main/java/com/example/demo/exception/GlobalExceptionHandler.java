@@ -34,9 +34,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDenied(AccessDeniedException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied. You don't have permission to update this patient.");
-    }
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public ResponseEntity<String> handleAccessDenied(AccessDeniedException e) {
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied. You don't have permission to update this patient.");
+//    }
 }
 

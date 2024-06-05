@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  userRole: string | null;
   login: (token: string, role: string) => void;
   logout: () => void;
   showMessage: (message: string, severity: "success" | "error") => void;
@@ -18,6 +19,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     !!Cookies.get("token")
   );
+  const [userRole, setUserRole] = useState<string | null>(
+    Cookies.get("role") || null
+  );
   const [snackbar, setSnackbar] = useState<{
     message: string;
     severity: "success" | "error";
@@ -27,8 +31,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     const handleStorageChange = () => {
       const token = Cookies.get("token");
+
       if (!token) {
         setIsAuthenticated(false);
+        setUserRole(null);
         navigate("/signin");
       }
     };
@@ -51,6 +57,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       sameSite: "strict",
     });
     setIsAuthenticated(true);
+    setUserRole(role);
     showMessage("Login successful", "success");
   };
 
@@ -58,6 +65,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     Cookies.remove("token");
     Cookies.remove("role");
     setIsAuthenticated(false);
+    setUserRole(null);
     navigate("/signin");
     showMessage("Logged out successfully", "success");
   };
@@ -72,7 +80,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, showMessage }}
+      value={{ isAuthenticated, userRole, login, logout, showMessage }}
     >
       {children}
       {snackbar && (

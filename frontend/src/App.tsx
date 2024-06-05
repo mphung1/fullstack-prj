@@ -10,18 +10,20 @@ import {
 } from "./pages";
 import { Header } from "./components";
 import useRole from "./hooks/useRole";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
-  const { userRole, isAdmin } = useRole();
+  const { isAuthenticated } = useAuth();
+  const { isAdmin } = useRole();
 
-  console.log(isAdmin);
+  // console.log(isAuthenticated, isAdmin);
 
   return (
     <div>
       <Header />
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        {isAdmin && (
+        {isAuthenticated && isAdmin && (
           <>
             <Route path="/create-patient" element={<CreatePatient />} />
             <Route
@@ -35,12 +37,12 @@ function App() {
             />
           </>
         )}
-        {/* {!userRole && ( */}
-        <>
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-        </>
-        {/* )} */}
+        {!isAuthenticated && (
+          <>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+          </>
+        )}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
