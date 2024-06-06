@@ -41,20 +41,14 @@ public class UserController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto data) {
-        // try {
-            // var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-            // var authUser = authenticationManager.authenticate(usernamePassword);
-            // var accessToken = tokenService.generateAccessToken((com.example.demo.models.entities.User) authUser.getPrincipal());
-            // var userRole = ((User) authUser.getPrincipal()).getRole().name();
-            // return ResponseEntity.ok(new JwtResponseDto(accessToken, userRole));
+        try {
             JwtResponseDto jwtResponse = userService.signIn(data);
             return ResponseEntity.ok(jwtResponse);
-
-        // } catch (BadCredentialsException e) {
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
-        // } catch (AuthenticationException e) {
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        // }
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     @PostMapping("/logout")
@@ -66,3 +60,57 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully");
     }
 }
+
+// package com.example.demo.controllers;
+
+// import com.example.demo.models.dtos.JwtResponseDto;
+// import com.example.demo.models.dtos.SignInRequestDto;
+// import com.example.demo.models.dtos.SignUpRequestDto;
+// import com.example.demo.services.TokenBlacklistService;
+// import com.example.demo.services.UserService;
+// import lombok.RequiredArgsConstructor;
+// import org.springframework.http.HttpStatus;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.security.authentication.BadCredentialsException;
+// import org.springframework.security.core.AuthenticationException;
+// import org.springframework.web.bind.annotation.*;
+
+// @RestController
+// @RequestMapping("/api/v1/auth")
+// @RequiredArgsConstructor
+// public class UserController {
+
+//     private final UserService userService;
+//     private final TokenBlacklistService tokenBlacklistService;
+
+//     @PostMapping("/signup")
+//     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto data) {
+//         try {
+//             userService.signUp(data);
+//             return ResponseEntity.status(HttpStatus.CREATED).build();
+//         } catch (Exception e) {
+//             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//         }
+//     }
+
+//     @PostMapping("/signin")
+//     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto data) {
+//         try {
+//             JwtResponseDto jwtResponse = userService.signIn(data);
+//             return ResponseEntity.ok(jwtResponse);
+//         } catch (BadCredentialsException e) {
+//             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+//         } catch (AuthenticationException e) {
+//             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+//         }
+//     }
+
+//     @PostMapping("/logout")
+//     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+//         if (token.startsWith("Bearer ")) {
+//             token = token.substring(7);
+//         }
+//         tokenBlacklistService.blacklistToken(token);
+//         return ResponseEntity.ok("Logged out successfully");
+//     }
+// }
