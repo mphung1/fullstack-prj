@@ -10,7 +10,7 @@ import com.example.demo.services.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
+// import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class UserController {
 
+    // @Autowired
+    // private AuthenticationManager authenticationManager;
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserService service;
+    private UserService userService;
     @Autowired
     private TokenProvider tokenService;
     @Autowired
@@ -32,7 +32,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto data) {
         try {
-            service.signUp(data);
+            userService.signUp(data);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -41,17 +41,20 @@ public class UserController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto data) {
-        try {
-            var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-            var authUser = authenticationManager.authenticate(usernamePassword);
-            var accessToken = tokenService.generateAccessToken((com.example.demo.models.entities.User) authUser.getPrincipal());
-            var userRole = ((User) authUser.getPrincipal()).getRole().name();
-            return ResponseEntity.ok(new JwtResponseDto(accessToken, userRole));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        // try {
+            // var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+            // var authUser = authenticationManager.authenticate(usernamePassword);
+            // var accessToken = tokenService.generateAccessToken((com.example.demo.models.entities.User) authUser.getPrincipal());
+            // var userRole = ((User) authUser.getPrincipal()).getRole().name();
+            // return ResponseEntity.ok(new JwtResponseDto(accessToken, userRole));
+            JwtResponseDto jwtResponse = userService.signIn(data);
+            return ResponseEntity.ok(jwtResponse);
+
+        // } catch (BadCredentialsException e) {
+        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+        // } catch (AuthenticationException e) {
+        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        // }
     }
 
     @PostMapping("/logout")
